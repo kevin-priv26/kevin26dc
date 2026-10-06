@@ -833,7 +833,10 @@
           <div class="files__status" id="uploadStatus">Excel, CSV o imágenes · máx. 5 MB por archivo</div>
         </div>
 
-        <div class="actions"><button class="btn btn--small" type="button" id="adminToggle">Soy administrador</button></div>
+        <div class="actions">
+  <button class="btn btn--small" type="button" id="adminToggle">Soy administrador</button>
+  <button class="btn btn--small btn--solid" type="button" id="viewerToggle">Soy espectador</button>
+</div>
       </div>
     </div>
   </div>
@@ -2170,6 +2173,16 @@
       }
     });
 
+    /* Botón SOY ESPECTADOR: ver y descargar archivos sin iniciar sesión */
+const viewerToggle = $("#viewerToggle");
+
+viewerToggle.addEventListener("click", async () => {
+  adminLogin.classList.add("hidden");
+  adminToggle.classList.remove("hidden");
+  estado(uploadStatus, "Modo espectador · puedes ver y descargar los archivos.", false);
+  await cargarArchivos();
+  filesList.scrollIntoView({ behavior: "smooth", block: "center" });
+});
     $("#adminLogout").addEventListener("click", async () => {
       try { await logout(); } catch {}
       await actualizarVista();
