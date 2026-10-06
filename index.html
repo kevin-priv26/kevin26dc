@@ -4,27 +4,23 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="theme-color" content="#050505" />
+  <meta name="robots" content="noindex, nofollow" />
   <title>KINGKASS</title>
 
-  <!-- Tipografías: Space Grotesk (títulos) + JetBrains Mono (detalles técnicos) -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
 
   <style>
-    /* =========================================================
-       1. VARIABLES DE DISEÑO
-       Cambia aquí colores, radios y tiempos de animación.
-       ========================================================= */
     :root {
-      --bg: #050505;            /* Fondo negro casi absoluto */
-      --surface: #0c0c0e;       /* Tarjetas y modales */
-      --surface-2: #131316;     /* Elementos internos */
+      --bg: #050505;
+      --surface: #0c0c0e;
+      --surface-2: #131316;
       --line: rgba(255, 255, 255, 0.08);
       --line-strong: rgba(255, 255, 255, 0.22);
       --text: #ffffff;
       --muted: rgba(255, 255, 255, 0.55);
-      --accent: #d9d9d9;        /* Acento plateado */
+      --accent: #d9d9d9;
       --glow: rgba(255, 255, 255, 0.12);
       --danger: #ff4d5e;
       --radius: 18px;
@@ -33,11 +29,7 @@
       --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
     }
 
-    /* =========================================================
-       2. BASE
-       ========================================================= */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
     html, body { height: 100%; }
 
     body {
@@ -49,7 +41,6 @@
       overflow-x: hidden;
     }
 
-    /* Rejilla tecnológica sutil de fondo */
     body::before {
       content: "";
       position: fixed;
@@ -65,7 +56,6 @@
       z-index: 0;
     }
 
-    /* Halo de luz suave */
     body::after {
       content: "";
       position: fixed;
@@ -81,10 +71,8 @@
 
     button { font: inherit; color: inherit; background: none; border: none; cursor: pointer; }
     img { max-width: 100%; display: block; }
-
     .hidden { display: none !important; }
 
-    /* Etiqueta pequeña monoespaciada */
     .tag {
       font-family: var(--font-mono);
       font-size: 0.72rem;
@@ -93,9 +81,6 @@
       color: var(--muted);
     }
 
-    /* =========================================================
-       3. BOTONES GENÉRICOS
-       ========================================================= */
     .btn {
       display: inline-flex;
       align-items: center;
@@ -126,9 +111,6 @@
     .btn--solid:hover { background: transparent; color: var(--text); }
     .btn--small { padding: 0.55rem 1rem; font-size: 0.72rem; }
 
-    /* =========================================================
-       4. PANTALLA DE ACCESO (LOGIN)
-       ========================================================= */
     .login {
       position: fixed;
       inset: 0;
@@ -158,7 +140,7 @@
       font-weight: 700;
       letter-spacing: 0.32em;
       margin: 0.75rem 0 0.4rem;
-      padding-left: 0.32em; /* compensa el letter-spacing para centrar */
+      padding-left: 0.32em;
     }
     .login__sub { color: var(--muted); font-size: 0.9rem; margin-bottom: 2rem; }
 
@@ -178,7 +160,6 @@
     .field input::placeholder { color: rgba(255,255,255,0.3); }
     .field input:focus { outline: none; border-color: var(--line-strong); box-shadow: 0 0 0 4px rgba(255,255,255,0.05); }
 
-    /* Botón mostrar/ocultar contraseña */
     .field__toggle {
       position: absolute;
       right: 0.6rem;
@@ -205,13 +186,19 @@
       letter-spacing: 0.05em;
     }
 
-    /* Vibración cuando la contraseña es incorrecta */
+    .login__card { position: relative; }
+    .login__admin {
+      position: absolute; top: 0.9rem; right: 0.9rem;
+      padding: 0.4rem 0.7rem;
+      border: 1px solid var(--line); border-radius: 999px;
+      font-family: var(--font-mono); font-size: 0.58rem;
+      letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted);
+      transition: color 0.3s, border-color 0.3s;
+    }
+    .login__admin:hover, .login__admin:focus-visible { color: var(--text); border-color: var(--line-strong); outline: none; }
     .shake { animation: shake 0.45s var(--ease); }
     .field input.is-error { border-color: var(--danger); }
 
-    /* =========================================================
-       5. SITIO PRINCIPAL
-       ========================================================= */
     .app {
       position: relative;
       z-index: 1;
@@ -221,7 +208,6 @@
       padding: 1.5rem clamp(1rem, 4vw, 3rem);
     }
 
-    /* Barra superior: estado + cerrar sesión */
     .topbar {
       display: flex;
       justify-content: space-between;
@@ -236,7 +222,6 @@
       animation: pulse 2s infinite;
     }
 
-    /* Encabezado centrado */
     .hero {
       text-align: center;
       padding: clamp(3rem, 10vh, 6rem) 0 clamp(2rem, 6vh, 3.5rem);
@@ -259,7 +244,6 @@
     }
     .hero__sub { color: var(--muted); max-width: 460px; margin: 0 auto; font-size: 1rem; }
 
-    /* Tres botones principales */
     .menu {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
@@ -283,7 +267,6 @@
       border-radius: var(--radius);
       transition: transform 0.5s var(--ease), border-color 0.5s var(--ease), box-shadow 0.5s var(--ease);
     }
-    /* Brillo que sigue al cursor (posición controlada por JS) */
     .menu__item::before {
       content: "";
       position: absolute;
@@ -316,7 +299,6 @@
     .menu__arrow { transition: transform 0.4s var(--ease); }
     .menu__item:hover .menu__arrow { transform: translate(4px, -4px); }
 
-    /* Sección de códigos de personas */
     .codes {
       width: 100%;
       max-width: 1000px;
@@ -394,7 +376,6 @@
       text-align: center;
     }
 
-    /* Animación de entrada del sitio principal (escalonada) */
     .app.is-entering .reveal { opacity: 0; transform: translateY(24px); filter: blur(6px); }
     .app.is-visible .reveal {
       opacity: 1; transform: none; filter: none;
@@ -402,9 +383,6 @@
       transition-delay: calc(var(--i, 0) * 110ms);
     }
 
-    /* =========================================================
-       6. MODALES
-       ========================================================= */
     .modal {
       position: fixed;
       inset: 0;
@@ -463,7 +441,6 @@
     .modal__body { padding: 1.5rem; display: grid; gap: 1.25rem; }
     .modal__body p { color: var(--muted); }
 
-    /* Bloques reutilizables dentro de los modales */
     .info-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 0.75rem; }
     .info-card {
       padding: 1rem 1.1rem;
@@ -503,11 +480,12 @@
 
     .actions { display: flex; gap: 0.6rem; flex-wrap: wrap; }
 
-    /* Tarjeta que abre otra ventana */
-    .info-card--link { text-align: left; color: inherit; font: inherit; cursor: pointer; }
+    .info-card--center { text-align: center; }
+    #adminZone { display: grid; gap: 1.25rem; }
+    .admin-slot:empty { display: none; }
+    .info-card--link { text-align: center; color: inherit; font: inherit; cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; }
     .info-card--link:focus-visible { outline: 2px solid var(--text); outline-offset: 3px; }
 
-    /* Archivos de PESO TOTAL CORTE */
     .files__admin { display: grid; gap: 0.75rem; padding: 1rem 1.1rem; border: 1px dashed var(--line-strong); border-radius: 12px; }
     .files__admin .field { margin: 0; }
     .files__admin .field input { padding-right: 1.1rem; }
@@ -520,9 +498,13 @@
     .files__info .list__main strong { overflow-wrap: anywhere; }
     .btn--danger:hover { background: var(--danger); border-color: var(--danger); color: var(--text); }
 
-    /* =========================================================
-       7. ANIMACIONES
-       ========================================================= */
+    .preview__img { width: 100%; max-height: 70vh; object-fit: contain; border-radius: 12px; border: 1px solid var(--line); background: var(--surface-2); }
+    .preview__wrap { overflow: auto; max-height: 62vh; border: 1px solid var(--line); border-radius: 12px; }
+    .preview__table { border-collapse: collapse; width: max-content; min-width: 100%; font-family: var(--font-mono); font-size: 0.78rem; }
+    .preview__table td { padding: 0.45rem 0.7rem; border-bottom: 1px solid var(--line); border-right: 1px solid var(--line); white-space: nowrap; text-align: left; }
+    .preview__table tr:first-child td { font-weight: 500; background: var(--surface-2); position: sticky; top: 0; }
+    .preview__sheet { justify-self: start; background: var(--surface-2); color: var(--text); border: 1px solid var(--line-strong); border-radius: 8px; padding: 0.4rem 0.6rem; font-family: var(--font-mono); font-size: 0.78rem; }
+
     @keyframes rise { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: none; } }
     @keyframes fadeIn { from { opacity: 0; transform: scale(1.03); } to { opacity: 1; transform: none; } }
     @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.35; } }
@@ -532,9 +514,6 @@
       60% { transform: translateX(-5px); } 80% { transform: translateX(5px); }
     }
 
-    /* =========================================================
-       8. RESPONSIVE (tablet y celular)
-       ========================================================= */
     @media (max-width: 900px) {
       .menu { grid-template-columns: repeat(3, 1fr); }
       .menu__item { min-height: 180px; padding: 1.5rem 1.25rem; }
@@ -551,7 +530,6 @@
       .modal__body { padding: 1.25rem; }
     }
 
-    /* Respeta a quienes prefieren menos movimiento */
     @media (prefers-reduced-motion: reduce) {
       *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
     }
@@ -559,37 +537,40 @@
 </head>
 <body>
 
-  <!-- =========================================================
-       PANTALLA DE ACCESO
-       ========================================================= -->
+  <!-- PANTALLA DE ACCESO -->
   <section class="login" id="login" aria-label="Acceso">
-    <form class="login__card" id="loginForm" autocomplete="off">
+    <div class="login__card">
+      <button type="button" class="login__admin" id="adminCorner">Ingresar como administrador</button>
       <span class="tag">Acceso restringido</span>
       <h1 class="login__logo">KINGKASS</h1>
-      <p class="login__sub">Introduce la contraseña para continuar</p>
+      <p class="login__sub" id="loginSub">Pulsa ingresar para continuar</p>
 
+      <div id="viewerBox"><button type="button" class="btn btn--solid" id="viewerEnter">Ingresar</button></div>
+
+      <form id="loginForm" class="hidden">
       <div class="field">
-        <input type="password" id="password" placeholder="Contraseña" aria-label="Contraseña" required />
+        <input type="text" id="loginUser" placeholder="Usuario" aria-label="Usuario" autocomplete="username" autocapitalize="none" required />
+      </div>
+      <div class="field">
+        <input type="password" id="password" placeholder="Contraseña" aria-label="Contraseña" autocomplete="current-password" required />
         <button type="button" class="field__toggle" id="togglePass" aria-label="Mostrar contraseña">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7S1 12 1 12z"/><circle cx="12" cy="12" r="3"/></svg>
         </button>
       </div>
 
-      <button type="submit" class="btn btn--solid">Entrar</button>
+      <button type="submit" class="btn btn--solid">Entrar como administrador</button>
+      </form>
       <p class="login__error" id="loginError" role="alert"></p>
-    </form>
+    </div>
   </section>
 
-  <!-- =========================================================
-       SITIO PRINCIPAL (oculto hasta acceder)
-       ========================================================= -->
+  <!-- SITIO PRINCIPAL -->
   <main class="app hidden" id="app">
 
-    <!-- Barra superior -->
     <div class="topbar reveal" style="--i:0">
       <div class="status">
         <span class="status__dot"></span>
-        <span class="tag">Sesión activa</span>
+        <span class="tag" id="modoTag">Modo espectador</span>
       </div>
       <button class="btn btn--small" id="logoutBtn">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg>
@@ -597,7 +578,6 @@
       </button>
     </div>
 
-    <!-- Encabezado centrado -->
     <header class="hero">
       <p class="tag reveal" style="--i:1">Panel privado</p>
       <h1 class="hero__title reveal" style="--i:2">KINGKASS</h1>
@@ -605,7 +585,6 @@
       <p class="hero__sub reveal" style="--i:3">Gestión centralizada de pesos, contactos y turnos.</p>
     </header>
 
-    <!-- Tres botones principales: data-modal indica qué ventana abren -->
     <nav class="menu" aria-label="Secciones">
       <button class="menu__item reveal" style="--i:4" data-modal="modal-pesos">
         <div class="menu__top">
@@ -647,7 +626,6 @@
       </button>
     </nav>
 
-    <!-- Sección de códigos de personas -->
     <section class="codes reveal" style="--i:7" aria-labelledby="codesTitle">
       <div class="section-head">
         <div>
@@ -658,10 +636,8 @@
       </div>
 
       <div class="codes__panel">
-        <!-- Lista generada desde el array PERSONAS (ver script) -->
         <div class="codes__list" id="codesList"></div>
 
-        <!-- Visor de la imagen seleccionada -->
         <div class="codes__viewer">
           <div class="codes__frame" id="codesFrame">
             <p class="codes__empty">Selecciona un código para ver su imagen</p>
@@ -685,9 +661,7 @@
     </footer>
   </main>
 
-  <!-- =========================================================
-       MODAL: KILAGES
-       ========================================================= -->
+  <!-- MODAL: KILAGES -->
   <div class="modal" id="modal-pesos" role="dialog" aria-modal="true" aria-labelledby="t-pesos">
     <div class="modal__box">
       <div class="modal__head">
@@ -695,31 +669,22 @@
         <button class="modal__close" data-close aria-label="Cerrar">✕</button>
       </div>
       <div class="modal__body">
-        <p>Resumen general de saldos. Reemplaza estos valores por tus datos reales.</p>
+        <p>Archivos Excel. Pulsa “Descargar” para guardarlos.</p>
 
         <div class="info-grid">
-          <button class="info-card info-card--link" data-modal="modal-corte"><div class="info-card__label">Peso total corte <span class="menu__arrow">→</span></div><div class="info-card__value">$ 1.250.000</div></button>
-          <div class="info-card"><div class="info-card__label">Ingresos mes</div><div class="info-card__value">$ 480.000</div></div>
-          <div class="info-card"><div class="info-card__label">Egresos mes</div><div class="info-card__value">$ 215.000</div></div>
+          <button class="info-card info-card--link" data-modal="modal-corte" data-seccion="corte"><div class="info-card__label">Peso total <span class="menu__arrow">→</span></div><div class="info-card__value">CORTE</div></button>
+          <button class="info-card info-card--link" data-modal="modal-corte" data-seccion="plegado"><div class="info-card__label">Peso total <span class="menu__arrow">→</span></div><div class="info-card__value">PLEGADO</div></button>
+          <button class="info-card info-card--link" data-modal="modal-corte" data-seccion="filete"><div class="info-card__label">Peso total <span class="menu__arrow">→</span></div><div class="info-card__value">FILETE</div></button>
         </div>
 
-        <div class="list">
-          <div class="list__row"><div class="list__main"><strong>Transferencia recibida</strong><span>02/10 · REF-0192</span></div><strong>+ $ 120.000</strong></div>
-          <div class="list__row"><div class="list__main"><strong>Pago proveedor</strong><span>30/09 · REF-0188</span></div><strong>- $ 45.000</strong></div>
-          <div class="list__row"><div class="list__main"><strong>Depósito</strong><span>27/09 · REF-0181</span></div><strong>+ $ 80.000</strong></div>
-        </div>
+        <div class="list" id="movList"><div class="files__status">Cargando archivos…</div></div>
 
-        <div class="actions">
-          <button class="btn btn--small btn--solid">Nuevo movimiento</button>
-          <button class="btn btn--small">Exportar</button>
-        </div>
+        <div class="admin-slot" id="slotPesos"></div>
       </div>
     </div>
   </div>
 
-  <!-- =========================================================
-       MODAL: CONTACTOS
-       ========================================================= -->
+  <!-- MODAL: CONTACTOS -->
   <div class="modal" id="modal-contactos" role="dialog" aria-modal="true" aria-labelledby="t-contactos">
     <div class="modal__box">
       <div class="modal__head">
@@ -757,9 +722,7 @@
     </div>
   </div>
 
-  <!-- =========================================================
-       MODAL: TURNOS
-       ========================================================= -->
+  <!-- MODAL: TURNOS -->
   <div class="modal" id="modal-turnos" role="dialog" aria-modal="true" aria-labelledby="t-turnos">
     <div class="modal__box">
       <div class="modal__head">
@@ -787,11 +750,7 @@
     </div>
   </div>
 
-  <!-- =========================================================
-       MODAL: PESO TOTAL CORTE (archivos)
-       Todos pueden ver y descargar. Solo un usuario de Netlify
-       Identity con el rol "admin" puede subir y eliminar.
-       ========================================================= -->
+  <!-- MODAL: PESO TOTAL CORTE (archivos en Supabase) -->
   <div class="modal" id="modal-corte" role="dialog" aria-modal="true" aria-labelledby="t-corte">
     <div class="modal__box">
       <div class="modal__head">
@@ -799,70 +758,45 @@
         <button class="modal__close" data-close aria-label="Cerrar">✕</button>
       </div>
       <div class="modal__body">
-        <p>Archivos Excel e imágenes del corte. Pulsa “Descargar” para guardarlos.</p>
+        <p>Archivos Excel e imágenes. Pulsa “Descargar” para guardarlos.</p>
 
         <div class="list" id="filesList"><div class="files__status">Cargando archivos…</div></div>
 
-        <!-- Acceso del administrador: Usuario + Contraseña -->
-        <form class="files__admin hidden" id="adminLogin">
-          <div class="info-card__label">Acceso administrador</div>
-          <div class="field"><input type="text" id="adminUser" placeholder="Usuario" autocomplete="username" required /></div>
-          <div class="field"><input type="password" id="adminPass" placeholder="Contraseña" autocomplete="current-password" required /></div>
-          <div class="actions"><button class="btn btn--small btn--solid" type="submit">Entrar</button></div>
-          <div class="files__status" id="adminLoginStatus"></div>
-        </form>
-
-        <!-- Aceptar invitación / restablecer contraseña (desde el enlace del email) -->
-        <form class="files__admin hidden" id="adminSetPass">
-          <div class="info-card__label">Crea tu contraseña</div>
-          <div class="field"><input type="password" id="adminNewPass" placeholder="Nueva contraseña" autocomplete="new-password" minlength="6" required /></div>
-          <div class="actions"><button class="btn btn--small btn--solid" type="submit">Guardar</button></div>
-          <div class="files__status" id="adminSetPassStatus"></div>
-        </form>
-
-        <!-- Panel del administrador -->
+        <div class="admin-slot" id="slotCorte"><div id="adminZone">
         <div class="files__admin hidden" id="adminPanel">
           <div class="info-card__label" id="adminWho">Administrador</div>
           <input type="file" id="fileInput" class="hidden" multiple accept=".xlsx,.xls,.xlsm,.csv,image/*" />
           <div class="actions">
             <button class="btn btn--small btn--solid" type="button" id="uploadBtn">Subir archivos</button>
+            <button class="btn btn--small" type="button" id="previewAsViewer">Ver como espectador</button>
             <button class="btn btn--small" type="button" id="adminLogout">Salir</button>
           </div>
-          <div class="files__status" id="uploadStatus">Excel, CSV o imágenes · máx. 5 MB por archivo</div>
+          <div class="files__status" id="uploadStatus" role="status" aria-live="polite">Excel, CSV o imágenes · máx. 5 MB por archivo</div>
         </div>
 
-        <div class="actions">
-          <button class="btn btn--small" type="button" id="adminToggle">Soy administrador</button>
-          <button class="btn btn--small btn--solid" type="button" id="viewerToggle">Soy espectador</button>
+        <div class="files__admin hidden" id="adminPreviewBar">
+          <div class="info-card__label">Vista de espectador · así lo ven los demás</div>
+          <div class="actions"><button class="btn btn--small btn--solid" type="button" id="backToAdmin">Volver a administrador</button></div>
+        </div>
+
         </div>
       </div>
     </div>
   </div>
 
+  <!-- MODAL: VISTA PREVIA DE ARCHIVOS -->
+  <div class="modal" id="modal-preview" role="dialog" aria-modal="true" aria-labelledby="previewTitle">
+    <div class="modal__box" style="max-width: 900px;">
+      <div class="modal__head">
+        <h3 class="modal__title" id="previewTitle" style="overflow-wrap:anywhere;">VISTA PREVIA</h3>
+        <button class="modal__close" data-close aria-label="Cerrar">✕</button>
+      </div>
+      <div class="modal__body" id="previewBody"></div>
+    </div>
+  </div>
+
   <script>
-    /* =========================================================
-       CONFIGURACIÓN
-       ========================================================= */
-
-    /*
-      CONTRASEÑA
-      Por seguridad no se guarda en texto plano: se guarda su hash SHA-256.
-      Para cambiarla:
-        1. Abre la consola del navegador (F12) en esta página.
-        2. Ejecuta:  await kkHash("tu-nueva-contraseña")
-        3. Copia el resultado y pégalo en PASSWORD_HASH.
-    */
-    const PASSWORD_HASH = "fa8138ec76fc2c619868c80ab55ecb382c65a14d066bbaa95e19e95efc7f3afb";
-
-    /* Clave usada para recordar la sesión mientras la pestaña siga abierta */
-    const SESSION_KEY = "kingkass_session";
-
-    /*
-      CÓDIGOS DE PERSONAS
-      Cada entrada tiene: code (código), name (nombre) e image (URL de la imagen).
-      - Si "image" está vacío, se genera automáticamente una tarjeta con el código.
-      - Para usar tus imágenes, coloca la ruta, p. ej.: image: "img/kk-001.jpg"
-    */
+    /* CÓDIGOS DE PERSONAS: si "image" está vacío se genera una tarjeta automática */
     const PERSONAS = [
       { code: "KK-001", name: "Ana Torres",     image: "" },
       { code: "KK-002", name: "Martín Ruiz",    image: "" },
@@ -872,49 +806,30 @@
       { code: "KK-006", name: "Tomás Herrera",  image: "" },
     ];
 
-    /* =========================================================
-       UTILIDADES
-       ========================================================= */
     const $ = (sel, ctx = document) => ctx.querySelector(sel);
     const $$ = (sel, ctx = document) => [...ctx.querySelectorAll(sel)];
 
-    /* Calcula el hash SHA-256 de un texto (expuesto para cambiar la contraseña) */
-    async function kkHash(text) {
-      const data = new TextEncoder().encode(text);
-      const buf = await crypto.subtle.digest("SHA-256", data);
-      return [...new Uint8Array(buf)].map(b => b.toString(16).padStart(2, "0")).join("");
-    }
-    window.kkHash = kkHash;
-
-    /*
-      Genera una imagen (PNG) estilo tarjeta de identificación con canvas.
-      Se usa cuando una persona no tiene imagen propia asignada.
-    */
     function generarTarjeta(persona) {
       const w = 1200, h = 800;
       const c = document.createElement("canvas");
       c.width = w; c.height = h;
       const ctx = c.getContext("2d");
 
-      // Fondo
       const g = ctx.createLinearGradient(0, 0, w, h);
       g.addColorStop(0, "#111114");
       g.addColorStop(1, "#050505");
       ctx.fillStyle = g;
       ctx.fillRect(0, 0, w, h);
 
-      // Rejilla
       ctx.strokeStyle = "rgba(255,255,255,0.05)";
       ctx.lineWidth = 1;
       for (let x = 0; x < w; x += 50) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, h); ctx.stroke(); }
       for (let y = 0; y < h; y += 50) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(w, y); ctx.stroke(); }
 
-      // Marco
       ctx.strokeStyle = "rgba(255,255,255,0.25)";
       ctx.lineWidth = 2;
       ctx.strokeRect(40, 40, w - 80, h - 80);
 
-      // Círculo con iniciales
       const iniciales = persona.name.split(" ").map(p => p[0]).slice(0, 2).join("").toUpperCase();
       ctx.beginPath();
       ctx.arc(w / 2, 300, 120, 0, Math.PI * 2);
@@ -927,14 +842,12 @@
       ctx.font = "500 96px 'Space Grotesk', sans-serif";
       ctx.fillText(iniciales, w / 2, 304);
 
-      // Nombre y código
       ctx.font = "500 56px 'Space Grotesk', sans-serif";
       ctx.fillText(persona.name, w / 2, 520);
       ctx.fillStyle = "rgba(255,255,255,0.55)";
       ctx.font = "500 36px 'JetBrains Mono', monospace";
       ctx.fillText(persona.code, w / 2, 590);
 
-      // Marca
       ctx.font = "700 24px 'Space Grotesk', sans-serif";
       ctx.fillStyle = "rgba(255,255,255,0.4)";
       ctx.textAlign = "left";
@@ -943,36 +856,17 @@
       return c.toDataURL("image/png");
     }
 
-    /* =========================================================
-       ACCESO CON CONTRASEÑA
-       ========================================================= */
+    /* ACCESO CON CONTRASEÑA */
     const loginEl = $("#login");
     const appEl = $("#app");
     const loginForm = $("#loginForm");
     const passInput = $("#password");
     const loginError = $("#loginError");
+    const loginUser = $("#loginUser");
 
-    // Mostrar / ocultar contraseña
     $("#togglePass").addEventListener("click", () => {
       passInput.type = passInput.type === "password" ? "text" : "password";
       passInput.focus();
-    });
-
-    loginForm.addEventListener("submit", async (e) => {
-      e.preventDefault();
-      const hash = await kkHash(passInput.value);
-
-      if (hash === PASSWORD_HASH) {
-        sessionStorage.setItem(SESSION_KEY, "1");
-        entrar();
-      } else {
-        loginError.textContent = "Contraseña incorrecta. Inténtalo de nuevo.";
-        passInput.classList.add("is-error");
-        loginForm.classList.remove("shake");
-        void loginForm.offsetWidth; // reinicia la animación
-        loginForm.classList.add("shake");
-        passInput.select();
-      }
     });
 
     passInput.addEventListener("input", () => {
@@ -980,7 +874,19 @@
       loginError.textContent = "";
     });
 
-    /* Oculta el login y muestra el sitio con animación de entrada */
+    const viewerBox = $("#viewerBox");
+    const adminCorner = $("#adminCorner");
+    const loginSub = $("#loginSub");
+    function modoLogin(admin) {
+      loginForm.classList.toggle("hidden", !admin);
+      viewerBox.classList.toggle("hidden", admin);
+      adminCorner.textContent = admin ? "Volver" : "Ingresar como administrador";
+      loginSub.textContent = admin ? "Acceso de administrador" : "Pulsa ingresar para continuar";
+      loginError.textContent = "";
+      if (admin) loginUser.focus();
+    }
+    adminCorner.addEventListener("click", () => modoLogin(loginForm.classList.contains("hidden")));
+
     function entrar(conAnimacionLogin = true) {
       const mostrarApp = () => {
         loginEl.classList.add("hidden");
@@ -1000,27 +906,24 @@
       }
     }
 
-    /* Cerrar sesión */
     $("#logoutBtn").addEventListener("click", () => {
-      sessionStorage.removeItem(SESSION_KEY);
+      window.dispatchEvent(new Event("kk:logout"));
       cerrarTodosLosModales();
       appEl.classList.add("hidden");
       appEl.classList.remove("is-visible");
       loginEl.classList.remove("hidden", "is-leaving");
       passInput.value = "";
-      loginError.textContent = "";
-      passInput.focus();
+      loginUser.value = "";
+      modoLogin(false);
     });
 
-    /* =========================================================
-       MODALES
-       ========================================================= */
-    let ultimoFoco = null;
+    /* MODALES */
+    const pilaFoco = [];
 
     function abrirModal(id) {
       const modal = document.getElementById(id);
       if (!modal) return;
-      ultimoFoco = document.activeElement;
+      pilaFoco.push(document.activeElement);
       modal.classList.add("is-open");
       document.body.style.overflow = "hidden";
       $(".modal__close", modal)?.focus();
@@ -1029,11 +932,13 @@
     function cerrarModal(modal) {
       modal.classList.remove("is-open");
       if (!$(".modal.is-open")) document.body.style.overflow = "";
-      ultimoFoco?.focus();
+      pilaFoco.pop()?.focus();
+      window.dispatchEvent(new CustomEvent("kk:modal-cerrado", { detail: modal.id }));
     }
 
     function cerrarTodosLosModales() {
       $$(".modal.is-open").forEach(m => m.classList.remove("is-open"));
+      pilaFoco.length = 0;
       document.body.style.overflow = "";
     }
 
@@ -1054,9 +959,7 @@
       }
     });
 
-    /* =========================================================
-       EFECTO DE BRILLO QUE SIGUE AL MOUSE EN LOS BOTONES
-       ========================================================= */
+    /* BRILLO QUE SIGUE AL MOUSE */
     $$(".menu__item").forEach(item => {
       item.addEventListener("mousemove", (e) => {
         const r = item.getBoundingClientRect();
@@ -1065,9 +968,7 @@
       });
     });
 
-    /* =========================================================
-       CÓDIGOS DE PERSONAS
-       ========================================================= */
+    /* CÓDIGOS DE PERSONAS */
     const codesList = $("#codesList");
     const codesFrame = $("#codesFrame");
     const codesSelected = $("#codesSelected");
@@ -1105,10 +1006,7 @@
       downloadBtn.classList.remove("hidden");
     }
 
-    /* =========================================================
-       IMAGEN DE EJEMPLO EN EL MODAL DE CONTACTOS
-       Cambia esta línea por: $("#contactosImg").src = "img/tu-imagen.jpg";
-       ========================================================= */
+    /* IMAGEN DE EJEMPLO EN CONTACTOS (cámbiala por: $("#contactosImg").src = "img/tu-imagen.jpg"; ) */
     $("#contactosImg").src = (() => {
       const c = document.createElement("canvas");
       c.width = 1400; c.height = 612;
@@ -1129,82 +1027,111 @@
       return c.toDataURL("image/png");
     })();
 
-    /* =========================================================
-       INICIO
-       ========================================================= */
-    if (sessionStorage.getItem(SESSION_KEY) === "1") {
-      entrar(false);
-    } else {
-      passInput.focus();
-    }
+    /* INICIO: el módulo de Supabase decide si hay sesión válida */
   </script>
 
   <script type="module">
-    /* =========================================================
-       ARCHIVOS DE PESO TOTAL CORTE
-       Lista pública. Subir y eliminar requiere iniciar sesión con
-       Netlify Identity y tener el rol "admin" (se valida en el servidor).
-       ========================================================= */
-    import {
-      login, logout, getUser, handleAuthCallback, acceptInvite, updateUser, AuthError,
-    } from "https://esm.sh/@netlify/identity@2.0.0";
+    /* ARCHIVOS DE PESO TOTAL CORTE (Supabase Storage)
+       Solo usuarios con sesión ven y descargan. Solo el rol admin sube y elimina. */
+    import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+
+    const SUPABASE_URL = "https://vlrxwlzapvvaxbatjccv.supabase.co";
+    const SUPABASE_KEY = "sb_publishable_Iw47QxQo5nU6YK5o6ts97g_pafbo00a";
+    const BUCKET = "archivos";
+    const MAX_BYTES = 5 * 1024 * 1024;
+    const EXT_OK = ["xlsx", "xls", "xlsm", "csv", "png", "jpg", "jpeg", "gif", "webp"];
+
+    const sb = createClient(SUPABASE_URL, SUPABASE_KEY);
+    const bucket = () => sb.storage.from(BUCKET);
 
     const $ = (sel) => document.querySelector(sel);
-    const API = "/api/archivos";
-
     const filesList = $("#filesList");
-    const adminLogin = $("#adminLogin");
-    const adminSetPass = $("#adminSetPass");
-    const adminPanel = $("#adminPanel");
-    const adminToggle = $("#adminToggle");
-    const fileInput = $("#fileInput");
+        const adminPanel = $("#adminPanel");
+            const fileInput = $("#fileInput");
     const uploadStatus = $("#uploadStatus");
 
     let esAdmin = false;
-    let tokenInvitacion = null;
+    let vistaEspectador = false;
+    const NOMBRES = { corte: "CORTE", plegado: "PLEGADO", filete: "FILETE" };
+    let seccion = "corte";
+    const movList = $("#movList");
+    const slotPesos = $("#slotPesos");
+    const slotCorte = $("#slotCorte");
+    const adminZone = $("#adminZone");
+    const ACCEPT_ORIGINAL = fileInput.accept;
+    const esMov = () => seccion === "movimientos";
 
     const estado = (el, texto, error = false) => {
       el.textContent = texto;
       el.classList.toggle("is-error", error);
     };
-
     const tamano = (b) => b > 1048576 ? `${(b / 1048576).toFixed(1)} MB` : `${Math.max(1, Math.round(b / 1024))} KB`;
     const fecha = (iso) => iso ? new Date(iso).toLocaleDateString("es", { day: "2-digit", month: "2-digit", year: "numeric" }) : "";
     const esImagen = (a) => (a.type || "").startsWith("image/");
 
-    /* Muestra el bloque correcto según el estado de la sesión */
+    function nombreSeguro(nombre) {
+      const limpio = nombre
+        .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+        .replace(/[^a-zA-Z0-9._-]+/g, "_")
+        .slice(-100);
+      return `${Date.now()}_${limpio}`;
+    }
+    const nombreVisible = (key) => key.replace(/^\d+_/, "");
+
     async function actualizarVista() {
-      const user = await getUser();
-      esAdmin = Boolean(user?.roles?.includes("admin"));
-      adminPanel.classList.toggle("hidden", !esAdmin);
-      adminToggle.classList.toggle("hidden", esAdmin || Boolean(tokenInvitacion));
-      if (esAdmin) {
-        adminLogin.classList.add("hidden");
-        $("#adminWho").textContent = `Administrador · ${user.email}`;
-      } else if (user) {
-        estado($("#adminLoginStatus"), "Tu cuenta no tiene el rol “admin”.", true);
-      }
+      const { data } = await sb.auth.getSession();
+      const sesion = data?.session;
+      esAdmin = sesion?.user?.app_metadata?.role === "admin";
+      adminPanel.classList.toggle("hidden", !esAdmin || vistaEspectador);
+      $("#adminPreviewBar").classList.toggle("hidden", !(esAdmin && vistaEspectador));
+      $("#modoTag").textContent = !esAdmin || vistaEspectador ? "Modo espectador" : "Modo administrador";
+      if (esAdmin) $("#adminWho").textContent = `Administrador · ${sesion.user.email.replace("@kingkass.app", "")}`;
     }
 
-    /* Carga y pinta la lista de archivos */
     async function cargarArchivos() {
+      const actual = seccion;
+      const lista = actual === "movimientos" ? movList : filesList;
+      let data, error;
       try {
-        const res = await fetch(API, { credentials: "same-origin" });
-        if (!res.ok) throw new Error();
-        const { archivos } = await res.json();
-        filesList.innerHTML = "";
-        if (!archivos.length) {
-          filesList.innerHTML = '<div class="files__status">Todavía no hay archivos.</div>';
-          return;
-        }
-        archivos.forEach(a => filesList.appendChild(filaArchivo(a)));
-      } catch {
-        filesList.innerHTML = '<div class="files__status is-error">No se pudieron cargar los archivos.</div>';
+        ({ data, error } = await bucket().list(actual, {
+          limit: 200,
+          sortBy: { column: "created_at", order: "desc" },
+        }));
+      } catch (e) {
+        error = e;
       }
+      if (actual !== seccion) return;
+      if (error) {
+        lista.innerHTML = '<div class="files__status is-error">No se pudieron cargar los archivos.</div>';
+        return;
+      }
+      const archivos = data
+        .filter((o) => o.name !== ".emptyFolderPlaceholder" && o.id)
+        .map((o) => ({
+          key: `${actual}/${o.name}`,
+          name: nombreVisible(o.name),
+          type: o.metadata?.mimetype || "",
+          size: o.metadata?.size || 0,
+          uploadedAt: o.created_at,
+        }));
+
+      if (archivos.length) {
+        const { data: firmadas } = await bucket().createSignedUrls(archivos.map((a) => a.key), 3600);
+        archivos.forEach((a, i) => { a.url = firmadas?.[i]?.signedUrl || ""; });
+      }
+      if (actual !== seccion) return;
+
+      lista.innerHTML = "";
+      if (!archivos.length) {
+        lista.innerHTML = '<div class="files__status">Todavía no hay archivos.</div>';
+        return;
+      }
+      archivos.forEach((a) => lista.appendChild(filaArchivo(a)));
     }
 
     function filaArchivo(a) {
-      const url = `${API}?key=${encodeURIComponent(a.key)}`;
+      const urlVer = a.url;
+
       const row = document.createElement("div");
       row.className = "list__row";
 
@@ -1215,12 +1142,12 @@
         img.className = "files__thumb";
         img.loading = "lazy";
         img.alt = "";
-        img.src = `${url}&ver`;
+        img.src = urlVer;
         info.appendChild(img);
       } else {
         const ico = document.createElement("div");
         ico.className = "files__icon";
-        ico.textContent = (a.name?.split(".").pop() || "").toUpperCase().slice(0, 4);
+        ico.textContent = (a.name.split(".").pop() || "").toUpperCase().slice(0, 4);
         info.appendChild(ico);
       }
       const main = document.createElement("div");
@@ -1228,20 +1155,32 @@
       const nombre = document.createElement("strong");
       nombre.textContent = a.name;
       const meta = document.createElement("span");
-      meta.textContent = `${fecha(a.uploadedAt)} · ${tamano(a.size || 0)}`;
+      meta.textContent = `${fecha(a.uploadedAt)} · ${tamano(a.size)}`;
       main.append(nombre, meta);
       info.appendChild(main);
 
       const acciones = document.createElement("div");
       acciones.className = "actions";
-      const descargar = document.createElement("a");
+      if (sePuedePrevisualizar(a)) {
+        const ver = document.createElement("button");
+        ver.className = "btn btn--small";
+        ver.type = "button";
+        ver.textContent = "Vista previa";
+        ver.addEventListener("click", () => vistaPrevia(a, urlVer));
+        acciones.appendChild(ver);
+      }
+      const descargar = document.createElement("button");
       descargar.className = "btn btn--small btn--solid";
-      descargar.href = url;
-      descargar.download = a.name;
+      descargar.type = "button";
       descargar.textContent = "Descargar";
+      descargar.addEventListener("click", async () => {
+        const { data, error } = await bucket().createSignedUrl(a.key, 60, { download: a.name });
+        if (error || !data) { alert("No se pudo descargar el archivo."); return; }
+        location.href = data.signedUrl;
+      });
       acciones.appendChild(descargar);
 
-      if (esAdmin) {
+      if (esAdmin && !vistaEspectador) {
         const borrar = document.createElement("button");
         borrar.className = "btn btn--small btn--danger";
         borrar.type = "button";
@@ -1257,146 +1196,263 @@
     async function eliminar(a, boton) {
       if (!confirm(`¿Eliminar “${a.name}”?`)) return;
       boton.disabled = true;
-      const res = await fetch(`${API}?key=${encodeURIComponent(a.key)}`, { method: "DELETE", credentials: "same-origin" });
-      if (!res.ok) {
+      const { error } = await bucket().remove([a.key]);
+      if (error) {
         boton.disabled = false;
-        alert(res.status === 403 ? "No tienes permiso para eliminar." : "No se pudo eliminar el archivo.");
+        alert("No se pudo eliminar el archivo.");
         return;
       }
       cargarArchivos();
     }
 
-    /* Subida de archivos (uno por uno) */
+    const EXT_IMG = ["png", "jpg", "jpeg", "gif", "webp"];
+    const EXT_XLS = ["xlsx", "xls", "xlsm"];
+    const extDe = (nombre) => (nombre.split(".").pop() || "").toLowerCase();
+    const sePuedePrevisualizar = (a) => {
+      const e = extDe(a.name);
+      return EXT_IMG.includes(e) || EXT_XLS.includes(e) || e === "csv";
+    };
+
+    function parseCsv(texto) {
+      const primera = texto.split(/\r?\n/, 1)[0] || "";
+      const sep = (primera.match(/;/g) || []).length > (primera.match(/,/g) || []).length ? ";" : ",";
+      const filas = [];
+      let fila = [], celda = "", comillas = false;
+      for (let i = 0; i < texto.length; i++) {
+        const c = texto[i];
+        if (comillas) {
+          if (c === '"' && texto[i + 1] === '"') { celda += '"'; i++; }
+          else if (c === '"') comillas = false;
+          else celda += c;
+        } else if (c === '"') comillas = true;
+        else if (c === sep) { fila.push(celda); celda = ""; }
+        else if (c === "\n") { fila.push(celda); filas.push(fila); fila = []; celda = ""; }
+        else if (c !== "\r") celda += c;
+      }
+      if (celda !== "" || fila.length) { fila.push(celda); filas.push(fila); }
+      return filas;
+    }
+
+    function tablaDe(filas) {
+      const wrap = document.createElement("div");
+      wrap.className = "preview__wrap";
+      const t = document.createElement("table");
+      t.className = "preview__table";
+      filas.slice(0, 200).forEach((f) => {
+        const tr = document.createElement("tr");
+        f.slice(0, 30).forEach((c) => {
+          const td = document.createElement("td");
+          td.textContent = String(c ?? "");
+          tr.appendChild(td);
+        });
+        t.appendChild(tr);
+      });
+      wrap.appendChild(t);
+      return wrap;
+    }
+
+    function notaDe(total) {
+      if (total <= 200) return document.createTextNode("");
+      const n = document.createElement("div");
+      n.className = "files__status";
+      n.textContent = "Mostrando las primeras 200 filas. Descarga el archivo para verlo completo.";
+      return n;
+    }
+
+    async function vistaPrevia(a, url) {
+      const body = $("#previewBody");
+      $("#previewTitle").textContent = a.name;
+      body.innerHTML = '<div class="files__status">Cargando vista previa…</div>';
+      window.abrirModal("modal-preview");
+      const ext = extDe(a.name);
+      try {
+        if (EXT_IMG.includes(ext)) {
+          body.innerHTML = "";
+          const img = new Image();
+          img.className = "preview__img";
+          img.alt = a.name;
+          img.src = url;
+          body.appendChild(img);
+          return;
+        }
+        const res = await fetch(url);
+        if (!res.ok) throw new Error("descarga");
+        if (ext === "csv") {
+          const filas = parseCsv(await res.text());
+          body.innerHTML = "";
+          body.append(tablaDe(filas), notaDe(filas.length));
+          return;
+        }
+        const mod = await import("https://esm.sh/xlsx@0.18.5");
+        const X = mod.default?.read ? mod.default : mod;
+        const wb = X.read(await res.arrayBuffer(), { type: "array" });
+        const cont = document.createElement("div");
+        const pintar = (nombre) => {
+          cont.innerHTML = "";
+          const filas = X.utils.sheet_to_json(wb.Sheets[nombre], { header: 1, defval: "" });
+          cont.append(tablaDe(filas), notaDe(filas.length));
+        };
+        body.innerHTML = "";
+        if (wb.SheetNames.length > 1) {
+          const sel = document.createElement("select");
+          sel.className = "preview__sheet";
+          wb.SheetNames.forEach((n) => sel.add(new Option(n, n)));
+          sel.addEventListener("change", () => pintar(sel.value));
+          body.appendChild(sel);
+        }
+        body.appendChild(cont);
+        pintar(wb.SheetNames[0]);
+      } catch {
+        body.innerHTML = '<div class="files__status is-error">No se pudo mostrar la vista previa. Prueba con “Descargar”.</div>';
+      }
+    }
+
+    $("#previewAsViewer").addEventListener("click", () => {
+      vistaEspectador = true;
+      actualizarVista();
+      cargarArchivos();
+    });
+    $("#backToAdmin").addEventListener("click", () => {
+      vistaEspectador = false;
+      actualizarVista();
+      cargarArchivos();
+    });
+
     $("#uploadBtn").addEventListener("click", () => fileInput.click());
     fileInput.addEventListener("change", async () => {
       const files = [...fileInput.files];
+      const dest = seccion;
       fileInput.value = "";
       let errores = 0;
+
       for (const [i, file] of files.entries()) {
-        estado(uploadStatus, `Subiendo ${i + 1}/${files.length}: ${file.name}…`);
-        const body = new FormData();
-        body.append("file", file);
-        const res = await fetch(API, { method: "POST", body, credentials: "same-origin" });
-        if (!res.ok) {
+        const ext = (file.name.split(".").pop() || "").toLowerCase();
+        if (!EXT_OK.includes(ext) || (dest === "movimientos" && !EXT_XLS.includes(ext))) {
           errores++;
-          estado(uploadStatus, `${file.name}: ${await res.text()}`, true);
+          estado(uploadStatus, `${file.name}: ${dest === "movimientos" ? "solo se permiten archivos Excel." : "tipo de archivo no permitido."}`, true);
+          continue;
+        }
+        if (file.size > MAX_BYTES) {
+          errores++;
+          estado(uploadStatus, `${file.name}: supera 5 MB.`, true);
+          continue;
+        }
+        estado(uploadStatus, `Subiendo ${i + 1}/${files.length}: ${file.name}…`);
+        const { error } = await bucket().upload(`${dest}/${nombreSeguro(file.name)}`, file, {
+          contentType: file.type || undefined,
+          upsert: false,
+        });
+        if (error) {
+          errores++;
+          estado(uploadStatus, `${file.name}: ${error.message}`, true);
         }
       }
       if (!errores) estado(uploadStatus, files.length === 1 ? "Archivo subido." : `${files.length} archivos subidos.`);
       cargarArchivos();
     });
 
-    /* =========================================================
-       INICIO DE SESIÓN DEL ADMINISTRADOR (Usuario + Contraseña)
-       Cámbialos aquí si quieres otros datos.
-       ========================================================= */
-    const ADMIN_USER = "Admin2026";
-    const ADMIN_PASS = "2601";
+    /* El usuario escrito se convierte en correo interno: admin -> admin@kingkass.app.
+       Si se escribe un correo completo (con @), se usa tal cual. */
+    const correoDe = (u) => {
+      const t = u.trim().toLowerCase();
+      return t.includes("@") ? t : `${t.replace(/\s+/g, "")}@kingkass.app`;
+    };
 
-    let sesionAdmin = false; // true mientras la sesión de admin esté activa
-
-    adminToggle.addEventListener("click", () => {
-      adminLogin.classList.toggle("hidden");
-      if (!adminLogin.classList.contains("hidden")) {
-        $("#adminUser").focus();
-        estado(uploadStatus, "");
-      }
+    window.addEventListener("kk:logout", async () => {
+      if (esAdmin) await sb.auth.signOut();
+      vistaEspectador = false;
+      await actualizarVista();
     });
 
-    adminLogin.addEventListener("submit", async (e) => {
-      e.preventDefault();
-      const st = $("#adminLoginStatus");
-
-      const usuario = $("#adminUser").value.trim();
-      const clave = $("#adminPass").value;
-
-      if (usuario === ADMIN_USER && clave === ADMIN_PASS) {
-        // Credenciales correctas: activa modo administrador
-        sesionAdmin = true;
-        esAdmin = true;
-        adminLogin.classList.add("hidden");
-        adminToggle.classList.add("hidden");
-        adminPanel.classList.remove("hidden");
-        $("#adminWho").textContent = "Administrador";
-        $("#adminPass").value = "";
-        estado(st, "");
-        estado(uploadStatus, "Sesión de administrador activa.", false);
-        cargarArchivos();
-      } else {
-        estado(st, "Usuario o contraseña incorrectos.", true);
-        $("#adminPass").value = "";
-        $("#adminPass").focus();
-      }
-    });
-
-    /* Salir del modo administrador */
     $("#adminLogout").addEventListener("click", async () => {
-      sesionAdmin = false;
-      esAdmin = false;
-      adminPanel.classList.add("hidden");
-      adminToggle.classList.remove("hidden");
+      await sb.auth.signOut();
+      vistaEspectador = false;
+      await actualizarVista();
       estado(uploadStatus, "");
       cargarArchivos();
     });
 
-    /* =========================================================
-       BOTÓN SOY ESPECTADOR: ver y descargar archivos sin login
-       ========================================================= */
-    const viewerToggle = $("#viewerToggle");
+    function activarSeccion(nombre) {
+      seccion = nombre;
+      slotCorte.appendChild(adminZone);
+      fileInput.accept = ACCEPT_ORIGINAL;
+      $("#t-corte").textContent = `PESO TOTAL ${NOMBRES[nombre]}`;
+      filesList.innerHTML = '<div class="files__status">Cargando archivos…</div>';
+      estado(uploadStatus, "Excel, CSV o imágenes · máx. 5 MB por archivo");
+      cargarArchivos();
+    }
 
-    viewerToggle.addEventListener("click", async () => {
-      adminLogin.classList.add("hidden");   // oculta el login de administrador
-      adminToggle.classList.remove("hidden");
-      adminSetPass.classList.add("hidden");
-      estado(uploadStatus, "Modo espectador · puedes ver y descargar los archivos.", false);
-      await cargarArchivos();
-      filesList.scrollIntoView({ behavior: "smooth", block: "center" });
+    function activarMovimientos() {
+      seccion = "movimientos";
+      slotPesos.appendChild(adminZone);
+      fileInput.accept = ".xlsx,.xls,.xlsm";
+      movList.innerHTML = '<div class="files__status">Cargando archivos…</div>';
+      estado(uploadStatus, "Solo Excel · máx. 5 MB por archivo");
+      cargarArchivos();
+    }
+
+    document.querySelectorAll("[data-seccion]").forEach((btn) => {
+      btn.addEventListener("click", () => activarSeccion(btn.dataset.seccion));
+    });
+    document.querySelector('.menu__item[data-modal="modal-pesos"]').addEventListener("click", activarMovimientos);
+
+    window.addEventListener("kk:modal-cerrado", (e) => {
+      if (e.detail === "modal-corte" && document.getElementById("modal-pesos").classList.contains("is-open")) activarMovimientos();
     });
 
-    /* Enlaces del email (invitación o recuperación de contraseña) */
-    adminSetPass.addEventListener("submit", async (e) => {
+    /* LOGIN REAL (Supabase Auth) para admin y espectadores */
+    loginForm.addEventListener("submit", async (e) => {
       e.preventDefault();
-      const st = $("#adminSetPassStatus");
-      const pass = $("#adminNewPass").value;
-      try {
-        if (tokenInvitacion) await acceptInvite(tokenInvitacion, pass);
-        else await updateUser({ password: pass });
-        tokenInvitacion = null;
-        adminSetPass.classList.add("hidden");
-        await actualizarVista();
-        cargarArchivos();
-      } catch (err) {
-        estado(st, err?.message || "No se pudo guardar la contraseña.", true);
+      const { data: res, error } = await sb.auth.signInWithPassword({ email: correoDe(loginUser.value), password: passInput.value });
+      const noAdmin = !error && res.user?.app_metadata?.role !== "admin";
+      if (noAdmin) await sb.auth.signOut();
+      if (error || noAdmin) {
+        loginError.textContent = noAdmin ? "Esta cuenta no es de administrador." : "Usuario o contraseña incorrectos.";
+        passInput.classList.add("is-error");
+        loginForm.classList.remove("shake");
+        void loginForm.offsetWidth;
+        loginForm.classList.add("shake");
+        passInput.select();
+        return;
       }
+      passInput.value = "";
+      vistaEspectador = false;
+      await actualizarVista();
+      entrar();
+      cargarArchivos();
     });
 
-    try {
-      const r = await handleAuthCallback();
-      if (r?.type === "invite" || r?.type === "recovery") {
-        tokenInvitacion = r.type === "invite" ? r.token : null;
-        adminSetPass.classList.remove("hidden");
-        sessionStorage.setItem("kingkass_abrir_corte", "1");
+    /* Espectadores: entran sin contraseña con una sesión anónima de Supabase */
+    const viewerEnter = $("#viewerEnter");
+    viewerEnter.addEventListener("click", async () => {
+      viewerEnter.disabled = true;
+      loginError.textContent = "";
+      const { data: cur } = await sb.auth.getSession();
+      if (!cur.session) {
+        const { error } = await sb.auth.signInAnonymously();
+        if (error) {
+          loginError.textContent = `No se pudo ingresar: ${error.message}`;
+          viewerEnter.disabled = false;
+          return;
+        }
       }
-    } catch {}
+      viewerEnter.disabled = false;
+      vistaEspectador = false;
+      await actualizarVista();
+      entrar();
+      cargarArchivos();
+    });
 
-    await actualizarVista();
-    cargarArchivos();
+    /* Si la sesión expira o se cierra en otra pestaña, volver al login */
+    sb.auth.onAuthStateChange((ev) => {
+      if (ev === "SIGNED_OUT" && !$("#app").classList.contains("hidden")) $("#logoutBtn").click();
+    });
 
-    // Recarga la lista cada vez que se abre la ventana
-    document.querySelector('[data-modal="modal-corte"]').addEventListener("click", cargarArchivos);
-
-    // Si se llegó desde un enlace del email, abre la ventana tras entrar al sitio
-    if (sessionStorage.getItem("kingkass_abrir_corte")) {
-      const abrir = () => {
-        if (document.getElementById("app").classList.contains("hidden")) return;
-        sessionStorage.removeItem("kingkass_abrir_corte");
-        document.getElementById("modal-corte").classList.add("is-open");
-        document.body.style.overflow = "hidden";
-        obs.disconnect();
-      };
-      const obs = new MutationObserver(abrir);
-      obs.observe(document.getElementById("app"), { attributes: true });
-      abrir();
+    const { data: inicial } = await sb.auth.getSession();
+    if (inicial.session && !inicial.session.user.is_anonymous) {
+      await actualizarVista();
+      entrar(false);
+      cargarArchivos();
     }
   </script>
 </body>
