@@ -803,10 +803,10 @@
 
         <div class="list" id="filesList"><div class="files__status">Cargando archivos…</div></div>
 
-        <!-- Acceso del administrador -->
+        <!-- Acceso del administrador: Usuario + Contraseña -->
         <form class="files__admin hidden" id="adminLogin">
           <div class="info-card__label">Acceso administrador</div>
-          <div class="field"><input type="email" id="adminEmail" placeholder="Email" autocomplete="username" required /></div>
+          <div class="field"><input type="text" id="adminUser" placeholder="Usuario" autocomplete="username" required /></div>
           <div class="field"><input type="password" id="adminPass" placeholder="Contraseña" autocomplete="current-password" required /></div>
           <div class="actions"><button class="btn btn--small btn--solid" type="submit">Entrar</button></div>
           <div class="files__status" id="adminLoginStatus"></div>
@@ -1286,11 +1286,19 @@
       cargarArchivos();
     });
 
-    /* Inicio de sesión del administrador */
+    /* =========================================================
+       INICIO DE SESIÓN DEL ADMINISTRADOR (Usuario + Contraseña)
+       Cámbialos aquí si quieres otros datos.
+       ========================================================= */
+    const ADMIN_USER = "Admin2026";
+    const ADMIN_PASS = "2601";
+
+    let sesionAdmin = false; // true mientras la sesión de admin esté activa
+
     adminToggle.addEventListener("click", () => {
       adminLogin.classList.toggle("hidden");
       if (!adminLogin.classList.contains("hidden")) {
-        $("#adminEmail").focus();
+        $("#adminUser").focus();
         estado(uploadStatus, "");
       }
     });
@@ -1298,16 +1306,37 @@
     adminLogin.addEventListener("submit", async (e) => {
       e.preventDefault();
       const st = $("#adminLoginStatus");
-      estado(st, "Entrando…");
-      try {
-        await login($("#adminEmail").value, $("#adminPass").value);
+
+      const usuario = $("#adminUser").value.trim();
+      const clave = $("#adminPass").value;
+
+      if (usuario === ADMIN_USER && clave === ADMIN_PASS) {
+        // Credenciales correctas: activa modo administrador
+        sesionAdmin = true;
+        esAdmin = true;
+        adminLogin.classList.add("hidden");
+        adminToggle.classList.add("hidden");
+        adminPanel.classList.remove("hidden");
+        $("#adminWho").textContent = "Administrador";
         $("#adminPass").value = "";
         estado(st, "");
-        await actualizarVista();
+        estado(uploadStatus, "Sesión de administrador activa.", false);
         cargarArchivos();
-      } catch (err) {
-        estado(st, err instanceof AuthError && err.status === 401 ? "Email o contraseña incorrectos." : "No se pudo iniciar sesión.", true);
+      } else {
+        estado(st, "Usuario o contraseña incorrectos.", true);
+        $("#adminPass").value = "";
+        $("#adminPass").focus();
       }
+    });
+
+    /* Salir del modo administrador */
+    $("#adminLogout").addEventListener("click", async () => {
+      sesionAdmin = false;
+      esAdmin = false;
+      adminPanel.classList.add("hidden");
+      adminToggle.classList.remove("hidden");
+      estado(uploadStatus, "");
+      cargarArchivos();
     });
 
     /* =========================================================
@@ -1322,12 +1351,6 @@
       estado(uploadStatus, "Modo espectador · puedes ver y descargar los archivos.", false);
       await cargarArchivos();
       filesList.scrollIntoView({ behavior: "smooth", block: "center" });
-    });
-
-    $("#adminLogout").addEventListener("click", async () => {
-      try { await logout(); } catch {}
-      await actualizarVista();
-      cargarArchivos();
     });
 
     /* Enlaces del email (invitación o recuperación de contraseña) */
