@@ -1,2 +1,0 @@
-# kevin26dc
-Proyecto
