@@ -1431,7 +1431,7 @@
       if (!cur.session) {
         const { error } = await sb.auth.signInAnonymously();
         if (error) {
-          loginError.textContent = `No se pudo ingresar: ${error.message}`;
+          loginError.textContent = "No se pudo ingresar. Inténtalo de nuevo.";
           viewerEnter.disabled = false;
           return;
         }
