@@ -630,6 +630,40 @@
     #modal-preview { z-index: 90; background: rgba(0,0,0,0.78); }
     #modal-preview .modal__box { max-width: 1100px; max-height: 88vh; box-shadow: 0 30px 100px rgba(0,0,0,0.9), 0 0 0 1px rgba(255,255,255,0.12); }
     #modal-preview .preview__wrap { max-height: 60vh; }
+    /* filas de archivo: nombre arriba, botones debajo */
+    .file-row { flex-direction: column; align-items: stretch; justify-content: flex-start; gap: 0.8rem; }
+    .file-row .files__info { flex: none; width: 100%; }
+    .file-row .list__main strong { overflow-wrap: anywhere; line-height: 1.35; }
+    .file-row > .actions { width: 100%; }
+    .cuadro__img { width: 100%; height: auto; display: block; border-radius: 8px; border: 1px solid var(--line); background: #fff; }
+    /* hoja tipo Excel (solo lectura) */
+    .sheet { background: #0b0b0d; }
+    .sheet__table { border-collapse: separate; border-spacing: 0; width: max-content; min-width: 100%; font-family: var(--font-mono); font-size: 0.78rem; }
+    .sheet__table th, .sheet__table td { padding: 0.35rem 0.65rem; border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); white-space: nowrap; min-width: 84px; max-width: 320px; overflow: hidden; text-overflow: ellipsis; }
+    .sheet__table th { background: #1a1a1f; color: var(--muted); font-weight: 500; text-align: center; position: sticky; top: 0; z-index: 2; }
+    .sheet__table tr > th:first-child { left: 0; z-index: 3; min-width: 44px; width: 44px; }
+    .sheet__table tr:not(:first-child) > th { top: auto; z-index: 1; left: 0; position: sticky; }
+    .sheet__table td.num { text-align: right; }
+    .sheet__table tr:hover td { background: rgba(255,255,255,0.04); }
+    /* MESES (PESO TOTAL CORTE) */
+    .mes--off { opacity: 0.45; }
+    .mes--off strong { font-weight: 500; }
+    .mes__tag { font-family: var(--font-mono); font-size: 0.68rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); }
+    /* VENTANA FLOTANTE: VER CUADRO */
+    .cuadro {
+      position: fixed; z-index: 95; left: 50%; top: 10vh; transform: translateX(-50%);
+      width: min(920px, 94vw); height: min(70vh, 640px); min-width: 280px; min-height: 180px;
+      display: flex; flex-direction: column; overflow: hidden; resize: both;
+      background: var(--surface); border: 1px solid var(--line-strong); border-radius: 14px;
+      box-shadow: 0 30px 90px rgba(0,0,0,0.85), 0 0 0 1px rgba(255,255,255,0.08);
+    }
+    .cuadro.is-moved { transform: none; }
+    .cuadro__bar { display: flex; align-items: center; justify-content: space-between; gap: 0.8rem; padding: 0.7rem 0.9rem; border-bottom: 1px solid var(--line); background: var(--surface-2); cursor: move; user-select: none; touch-action: none; }
+    .cuadro__titulo { font-family: var(--font-mono); font-size: 0.8rem; letter-spacing: 0.1em; font-weight: 500; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .cuadro__x { width: 2rem; height: 2rem; border: 1px solid var(--line-strong); border-radius: 50%; flex: none; }
+    .cuadro__x:hover { background: var(--text); color: var(--bg); }
+    .cuadro__body { flex: 1; min-height: 0; overflow: auto; padding: 0.8rem; display: grid; gap: 0.7rem; align-content: start; }
+    .cuadro__body .preview__wrap { max-height: none; }
     .preview__tabs { display: flex; gap: 0.4rem; flex-wrap: wrap; }
     .preview__tab { padding: 0.4rem 0.9rem; border: 1px solid var(--line-strong); border-radius: 999px; font-family: var(--font-mono); font-size: 0.75rem; color: var(--muted); transition: background 0.3s, color 0.3s; }
     .preview__tab:hover { color: var(--text); }
@@ -1555,8 +1589,9 @@
         <button class="modal__close" data-close aria-label="Cerrar">✕</button>
       </div>
       <div class="modal__body">
-        <p>Archivos Excel e imágenes. Pulsa “Descargar” para guardarlos.</p>
+        <p id="corteIntro">Archivos Excel e imágenes. Pulsa “Descargar” para guardarlos.</p>
 
+        <div class="list hidden" id="mesesList"></div>
         <div class="list" id="filesList"><div class="files__status">Cargando archivos…</div></div>
 
         <div class="admin-slot" id="slotCorte"><div id="adminZone">
@@ -1582,17 +1617,17 @@
   </div>
   </div><!-- cierre de #modal-corte (faltaba) -->
 
-  <!-- MODAL: PESOS DE UNA PERSONA (desde PERSONAL > VER PESOS) -->
-  <div class="modal" id="modal-persona" role="dialog" aria-modal="true" aria-labelledby="t-persona">
+  <!-- MODAL: ARCHIVOS DE UNA CARPETA (mes de CORTE · persona de PERSONAL) -->
+  <div class="modal" id="modal-carpeta" role="dialog" aria-modal="true" aria-labelledby="t-carpeta">
     <div class="modal__box">
       <div class="modal__head">
-        <h3 class="modal__title" id="t-persona" style="overflow-wrap:anywhere;">PESOS</h3>
+        <h3 class="modal__title" id="t-carpeta" style="overflow-wrap:anywhere;">ARCHIVOS</h3>
         <button class="modal__close" data-close aria-label="Cerrar">✕</button>
       </div>
       <div class="modal__body">
         <p>Archivos Excel e imágenes. Pulsa “Descargar” para guardarlos.</p>
-        <div class="list" id="perList"><div class="files__status">Cargando archivos…</div></div>
-        <div class="admin-slot" id="slotPersona"></div>
+        <div class="list" id="carpetaList"><div class="files__status">Cargando archivos…</div></div>
+        <div class="admin-slot" id="slotCarpeta"></div>
       </div>
     </div>
   </div>
@@ -1626,6 +1661,15 @@
       </div>
       <div class="modal__body" id="previewBody"></div>
     </div>
+  </div>
+
+  <!-- VENTANA FLOTANTE: VER CUADRO (Excel / CSV) -->
+  <div class="cuadro hidden" id="cuadro" role="dialog" aria-label="Cuadro del archivo">
+    <div class="cuadro__bar" id="cuadroBar">
+      <strong id="cuadroTitulo" class="cuadro__titulo">CUADRO</strong>
+      <button type="button" class="cuadro__x" id="cuadroCerrar" aria-label="Cerrar cuadro">✕</button>
+    </div>
+    <div class="cuadro__body" id="cuadroBody"></div>
   </div>
 
   <script>
@@ -1947,9 +1991,14 @@
     const movList = $("#movList");
     const slotPesos = $("#slotPesos");
     const slotCorte = $("#slotCorte");
-    const slotPersona = $("#slotPersona");
-    const perList = $("#perList");
-    const esPersona = (s) => String(s).startsWith("personal/");
+    const slotCarpeta = $("#slotCarpeta");
+    const carpetaList = $("#carpetaList");
+    const esCarpeta = (s) => String(s).includes("/");   /* personal/<tipo>-<NN> · corte/<año>-<mes> */
+    const mesesList = $("#mesesList");
+    const MESES = ["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"];
+    const MES_ANIO = 2026;
+    const MESES_HABILITADOS = [10, 11, 12];   /* Octubre, Noviembre, Diciembre */
+    const SECCIONES_POR_MES = ["corte", "plegado", "filete"];      /* secciones de KILAGES que se dividen por meses */
     const adminZone = $("#adminZone");
     const ACCEPT_ORIGINAL = fileInput.accept;
     const esMov = () => seccion === "movimientos";
@@ -1986,7 +2035,7 @@
 
     async function cargarArchivos() {
       const actual = seccion;
-      const lista = actual === "movimientos" ? movList : esPersona(actual) ? perList : filesList;
+      const lista = actual === "movimientos" ? movList : esCarpeta(actual) ? carpetaList : filesList;
       let data, error;
       try {
         ({ data, error } = await bucket().list(actual, {
@@ -2015,6 +2064,32 @@
         const { data: firmadas } = await bucket().createSignedUrls(archivos.map((a) => a.key), 3600);
         archivos.forEach((a, i) => { a.url = firmadas?.[i]?.signedUrl || ""; });
       }
+      /* cuadros (PNG) de cada Excel: <carpeta>/cuadros/<archivo>.png */
+      if (esCarpeta(actual) && archivos.length) {
+        const hay = new Set();
+        try {
+          const { data: cs } = await bucket().list(`${actual}/cuadros`, { limit: 200 });
+          (cs || []).filter((o) => o.id).forEach((o) => hay.add(o.name));
+        } catch (e) { /* sin cuadros */ }
+        archivos.forEach((a) => {
+          const nombreKey = a.key.split("/").pop();
+          a.cuadroPath = `${actual}/cuadros/${nombreKey}.png`;
+          a.tieneCuadro = hay.has(`${nombreKey}.png`);
+        });
+      }
+      /* imagen de VISTA PREVIA de cada Excel/CSV: <carpeta>/previas/<archivo>.png */
+      if (archivos.length) {
+        const hayP = new Set();
+        try {
+          const { data: ps } = await bucket().list(`${actual}/previas`, { limit: 200 });
+          (ps || []).filter((o) => o.id).forEach((o) => hayP.add(o.name));
+        } catch (e) { /* sin previas */ }
+        archivos.forEach((a) => {
+          const nombreKey = a.key.split("/").pop();
+          a.previaPath = `${actual}/previas/${nombreKey}.png`;
+          a.tienePrevia = hayP.has(`${nombreKey}.png`);
+        });
+      }
       if (actual !== seccion) return;
 
       lista.innerHTML = "";
@@ -2029,7 +2104,7 @@
       const urlVer = a.url;
 
       const row = document.createElement("div");
-      row.className = "list__row";
+      row.className = "list__row file-row";
 
       const info = document.createElement("div");
       info.className = "files__info";
@@ -2049,7 +2124,7 @@
       const main = document.createElement("div");
       main.className = "list__main";
       const nombre = document.createElement("strong");
-      nombre.textContent = a.name;
+      nombre.textContent = a.name.replace(/_/g, " ");
       const meta = document.createElement("span");
       meta.textContent = `${fecha(a.uploadedAt)} · ${tamano(a.size)}`;
       main.append(nombre, meta);
@@ -2057,13 +2132,32 @@
 
       const acciones = document.createElement("div");
       acciones.className = "actions";
-      if (sePuedePrevisualizar(a)) {
+      const esHoja = ["xlsx", "xls", "xlsm", "csv"].includes(extDe(a.name));
+      if (esHoja) {
+        /* Excel/CSV: la vista previa es una imagen que sube el administrador */
+        if (a.tienePrevia) {
+          const ver = document.createElement("button");
+          ver.className = "btn btn--small";
+          ver.type = "button";
+          ver.textContent = "Vista previa";
+          ver.addEventListener("click", () => vistaPreviaImagen(a));
+          acciones.appendChild(ver);
+        }
+      } else if (sePuedePrevisualizar(a)) {
         const ver = document.createElement("button");
         ver.className = "btn btn--small";
         ver.type = "button";
         ver.textContent = "Vista previa";
         ver.addEventListener("click", () => vistaPrevia(a, urlVer));
         acciones.appendChild(ver);
+      }
+      if (esCarpeta(seccion) && esHoja) {
+        const cuadro = document.createElement("button");
+        cuadro.className = "btn btn--small";
+        cuadro.type = "button";
+        cuadro.textContent = "Ver cuadro";
+        cuadro.addEventListener("click", () => verCuadro(a));
+        acciones.appendChild(cuadro);
       }
       const descargar = document.createElement("button");
       descargar.className = "btn btn--small btn--solid";
@@ -2076,6 +2170,22 @@
       });
       acciones.appendChild(descargar);
 
+      if (esAdmin && !vistaEspectador && esHoja) {
+        const subirP = document.createElement("button");
+        subirP.className = "btn btn--small";
+        subirP.type = "button";
+        subirP.textContent = a.tienePrevia ? "Cambiar vista previa" : "Subir vista previa";
+        subirP.addEventListener("click", () => { previaDestino = a; previaFile.click(); });
+        acciones.appendChild(subirP);
+      }
+      if (esAdmin && !vistaEspectador && esCarpeta(seccion) && esHoja) {
+        const subir = document.createElement("button");
+        subir.className = "btn btn--small";
+        subir.type = "button";
+        subir.textContent = a.tieneCuadro ? "Cambiar cuadro" : "Subir cuadro";
+        subir.addEventListener("click", () => { cuadroDestino = a; cuadroFile.click(); });
+        acciones.appendChild(subir);
+      }
       if (esAdmin && !vistaEspectador) {
         const borrar = document.createElement("button");
         borrar.className = "btn btn--small btn--danger";
@@ -2092,7 +2202,7 @@
     async function eliminar(a, boton) {
       if (!confirm(`¿Eliminar “${a.name}”?`)) return;
       boton.disabled = true;
-      const { error } = await bucket().remove([a.key]);
+      const { error } = await bucket().remove([a.key, a.cuadroPath, a.previaPath].filter(Boolean));
       if (error) {
         boton.disabled = false;
         alert("No se pudo eliminar el archivo.");
@@ -2100,6 +2210,113 @@
       }
       cargarArchivos();
     }
+
+    /* VISTA PREVIA (Excel/CSV): muestra la imagen que subió el administrador */
+    async function vistaPreviaImagen(a) {
+      const body = $("#previewBody");
+      $("#previewTitle").textContent = a.name.replace(/_/g, " ");
+      body.innerHTML = '<div class="files__status">Cargando vista previa…</div>';
+      window.abrirModal("modal-preview");
+      let url = "";
+      try {
+        const { data } = await bucket().createSignedUrl(a.previaPath, 3600);
+        url = data?.signedUrl || "";
+      } catch (e) { /* sin URL */ }
+      if (!url) { body.innerHTML = '<div class="files__status is-error">No se pudo cargar la vista previa.</div>'; return; }
+      body.innerHTML = "";
+      const img = new Image();
+      img.className = "preview__img";
+      img.alt = `Vista previa de ${a.name}`;
+      img.onerror = () => { body.innerHTML = '<div class="files__status is-error">No se pudo cargar la vista previa.</div>'; };
+      img.src = url;
+      body.appendChild(img);
+    }
+    /* el administrador sube una imagen de vista previa por cada Excel */
+    const previaFile = document.createElement("input");
+    previaFile.type = "file"; previaFile.accept = "image/png,image/jpeg,image/webp"; previaFile.className = "hidden";
+    document.body.appendChild(previaFile);
+    let previaDestino = null;
+    previaFile.addEventListener("change", async () => {
+      const file = previaFile.files[0], a = previaDestino;
+      previaFile.value = "";
+      if (!file || !a) return;
+      if (!(file.type || "").startsWith("image/")) return estado(uploadStatus, "La vista previa debe ser una imagen (PNG, JPG o WEBP).", true);
+      if (file.size > MAX_BYTES) return estado(uploadStatus, "La imagen supera 5 MB.", true);
+      estado(uploadStatus, "Subiendo vista previa…");
+      await bucket().remove([a.previaPath]);
+      const { error } = await bucket().upload(a.previaPath, file, { contentType: file.type || "image/png", upsert: false });
+      if (error) return estado(uploadStatus, error.message, true);
+      estado(uploadStatus, "Vista previa subida.");
+      cargarArchivos();
+    });
+
+    /* VER CUADRO: ventana flotante con el PNG que sube el administrador para cada Excel */
+    const cuadroEl = $("#cuadro"), cuadroBody = $("#cuadroBody");
+    let cuadroDestino = null;
+    async function verCuadro(a) {
+      $("#cuadroTitulo").textContent = `CUADRO · ${a.name.replace(/_/g, " ")}`;
+      cuadroEl.classList.remove("hidden");
+      if (!a.tieneCuadro) {
+        cuadroBody.innerHTML = '<div class="files__status">Todavía no hay un cuadro (PNG) para este archivo.</div>';
+        return;
+      }
+      cuadroBody.innerHTML = '<div class="files__status">Cargando cuadro…</div>';
+      let url = "";
+      try {
+        const { data } = await bucket().createSignedUrl(a.cuadroPath, 3600);
+        url = data?.signedUrl || "";
+      } catch (e) { /* sin URL */ }
+      if (!url) { cuadroBody.innerHTML = '<div class="files__status is-error">No se pudo cargar el cuadro.</div>'; return; }
+      cuadroBody.innerHTML = "";
+      const img = new Image();
+      img.className = "cuadro__img";
+      img.alt = `Cuadro de ${a.name}`;
+      img.onerror = () => { cuadroBody.innerHTML = '<div class="files__status is-error">No se pudo cargar el cuadro.</div>'; };
+      img.src = url;
+      cuadroBody.appendChild(img);
+    }
+    /* el administrador sube un PNG por cada Excel */
+    const cuadroFile = document.createElement("input");
+    cuadroFile.type = "file"; cuadroFile.accept = "image/png"; cuadroFile.className = "hidden";
+    document.body.appendChild(cuadroFile);
+    cuadroFile.addEventListener("change", async () => {
+      const file = cuadroFile.files[0], a = cuadroDestino;
+      cuadroFile.value = "";
+      if (!file || !a) return;
+      if (file.type !== "image/png" && extDe(file.name) !== "png") return estado(uploadStatus, "El cuadro debe ser un archivo PNG.", true);
+      if (file.size > MAX_BYTES) return estado(uploadStatus, "El cuadro supera 5 MB.", true);
+      estado(uploadStatus, "Subiendo cuadro…");
+      await bucket().remove([a.cuadroPath]);
+      const { error } = await bucket().upload(a.cuadroPath, file, { contentType: "image/png", upsert: false });
+      if (error) return estado(uploadStatus, error.message, true);
+      estado(uploadStatus, "Cuadro subido.");
+      cargarArchivos();
+    });
+    $("#cuadroCerrar").addEventListener("click", () => cuadroEl.classList.add("hidden"));
+    window.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && !cuadroEl.classList.contains("hidden")) { e.stopImmediatePropagation(); cuadroEl.classList.add("hidden"); }
+    }, true);
+    (() => {
+      let dx = 0, dy = 0, arrastrando = false;
+      const bar = $("#cuadroBar");
+      bar.addEventListener("pointerdown", (e) => {
+        if (e.target.closest("button")) return;
+        const r = cuadroEl.getBoundingClientRect();
+        cuadroEl.classList.add("is-moved");
+        cuadroEl.style.left = r.left + "px"; cuadroEl.style.top = r.top + "px";
+        dx = e.clientX - r.left; dy = e.clientY - r.top; arrastrando = true;
+        bar.setPointerCapture(e.pointerId);
+      });
+      bar.addEventListener("pointermove", (e) => {
+        if (!arrastrando) return;
+        const x = Math.min(Math.max(0, e.clientX - dx), innerWidth - 80);
+        const y = Math.min(Math.max(0, e.clientY - dy), innerHeight - 50);
+        cuadroEl.style.left = x + "px"; cuadroEl.style.top = y + "px";
+      });
+      const fin = () => { arrastrando = false; };
+      bar.addEventListener("pointerup", fin);
+      bar.addEventListener("pointercancel", fin);
+    })();
 
     const EXT_IMG = ["png", "jpg", "jpeg", "gif", "webp"];
     const EXT_XLS = ["xlsx", "xls", "xlsm"];
@@ -2147,6 +2364,39 @@
       return wrap;
     }
 
+    function notaLectura() {
+      const n = document.createElement("div");
+      n.className = "files__status";
+      n.textContent = "Vista de solo lectura · no se puede editar ni eliminar desde aquí.";
+      return n;
+    }
+    function letraCol(n) { let t = ""; for (n++; n > 0; n = Math.floor((n - 1) / 26)) t = String.fromCharCode(65 + ((n - 1) % 26)) + t; return t; }
+    function hojaDe(filas) {
+      const wrap = document.createElement("div");
+      wrap.className = "preview__wrap sheet";
+      const t = document.createElement("table");
+      t.className = "sheet__table";
+      const vis = filas.slice(0, 200);
+      const cols = Math.min(30, Math.max(1, ...vis.map((f) => f.length)));
+      const head = document.createElement("tr");
+      head.appendChild(document.createElement("th"));
+      for (let c = 0; c < cols; c++) { const th = document.createElement("th"); th.textContent = letraCol(c); head.appendChild(th); }
+      t.appendChild(head);
+      vis.forEach((f, r) => {
+        const tr = document.createElement("tr");
+        const n = document.createElement("th"); n.textContent = r + 1; tr.appendChild(n);
+        for (let c = 0; c < cols; c++) {
+          const td = document.createElement("td");
+          const v = String(f[c] ?? "");
+          td.textContent = v;
+          if (/^-?[\d.,]+%?$/.test(v.trim()) && v.trim()) td.className = "num";
+          tr.appendChild(td);
+        }
+        t.appendChild(tr);
+      });
+      wrap.appendChild(t);
+      return wrap;
+    }
     function notaDe(total) {
       if (total <= 200) return document.createTextNode("");
       const n = document.createElement("div");
@@ -2176,7 +2426,7 @@
         if (ext === "csv") {
           const filas = parseCsv(await res.text());
           body.innerHTML = "";
-          body.append(tablaDe(filas), notaDe(filas.length));
+          body.append(hojaDe(filas), notaDe(filas.length), notaLectura());
           return;
         }
         const X = await cargarXLSX();
@@ -2185,10 +2435,11 @@
         const pintar = (nombre) => {
           cont.innerHTML = "";
           const filas = X.utils.sheet_to_json(wb.Sheets[nombre], { header: 1, defval: "", raw: false, blankrows: false });
-          cont.append(tablaDe(filas), notaDe(filas.length));
+          cont.append(hojaDe(filas), notaDe(filas.length));
         };
         body.innerHTML = "";
         body.appendChild(cont);
+        body.appendChild(notaLectura());
         if (wb.SheetNames.length > 1) {
           const tabs = document.createElement("div");
           tabs.className = "preview__tabs";
@@ -2484,20 +2735,32 @@
       ctFilas.forEach(pintarFilaContacto);
     }
 
+    /* Ventana de archivos de una carpeta de Supabase (mes de CORTE o persona de PERSONAL) */
+    function abrirCarpeta(ruta, titulo, nota) {
+      seccion = ruta;
+      slotCarpeta.appendChild(adminZone);
+      fileInput.accept = ACCEPT_ORIGINAL;
+      $("#t-carpeta").textContent = titulo;
+      carpetaList.innerHTML = '<div class="files__status">Cargando archivos…</div>';
+      estado(uploadStatus, nota);
+      window.abrirModal("modal-carpeta");
+      cargarArchivos();
+    }
+    /* al cerrar la ventana del mes, se vuelve a la lista de meses */
+    window.addEventListener("kk:modal-cerrado", (e) => {
+      if (e.detail === "modal-carpeta" && document.getElementById("modal-corte").classList.contains("is-open")) {
+        const padre = String(seccion).split("/")[0];
+        seccion = SECCIONES_POR_MES.includes(padre) ? padre : "corte";
+      }
+    });
+
     /* VER PESOS (Personal): ventana de archivos de esa persona (igual que PESO TOTAL CORTE).
        Carpeta en Supabase: personal/<tipo>-<número>/ · No depende de KILAJES. */
     const CT_TIPO = { filetera: "FILETERA", plegadora: "PLEGADORA", cortadora: "CORTADORA" };
     function verPesoPersona(fila) {
       const tipo = fila.dataset.tipo, num = pad(+fila.dataset.numero);
       const nombre = (ctData[tipo][num] && ctData[tipo][num].nombre) || fila.dataset.nombreOrig;
-      seccion = `personal/${tipo}-${num}`;
-      slotPersona.appendChild(adminZone);
-      fileInput.accept = ACCEPT_ORIGINAL;
-      $("#t-persona").textContent = `PESOS · ${nombre} (${num})`;
-      perList.innerHTML = '<div class="files__status">Cargando archivos…</div>';
-      estado(uploadStatus, `${CT_TIPO[tipo]} N° ${num} · Excel, CSV o imágenes · máx. 5 MB por archivo`);
-      window.abrirModal("modal-persona");
-      cargarArchivos();
+      abrirCarpeta(`personal/${tipo}-${num}`, `PESOS · ${nombre} (${num})`, `${CT_TIPO[tipo]} N° ${num} · Excel, CSV o imágenes · máx. 5 MB por archivo`);
     }
     ctFilas.forEach((fila) => {
       fila.querySelector("[data-ver-pesos]")?.addEventListener("click", () => verPesoPersona(fila));
@@ -2626,11 +2889,52 @@
       cargarArchivos();
     });
 
+    function pintarMeses() {
+      mesesList.innerHTML = "";
+      MESES.forEach((nombre, idx) => {
+        const n = idx + 1, on = MESES_HABILITADOS.includes(n);
+        const row = document.createElement("div");
+        row.className = "list__row" + (on ? "" : " mes--off");
+        const main = document.createElement("div");
+        main.className = "list__main";
+        const st = document.createElement("strong");
+        st.textContent = `${pad(n)} · ${nombre.toUpperCase()}`;
+        const sp = document.createElement("span");
+        sp.textContent = String(MES_ANIO);
+        main.append(st, sp);
+        const acc = document.createElement("div");
+        acc.className = "actions";
+        if (on) {
+          const b = document.createElement("button");
+          b.type = "button"; b.className = "btn btn--small btn--solid"; b.textContent = "Abrir →";
+          b.addEventListener("click", () => abrirCarpeta(`${seccion}/${MES_ANIO}-${pad(n)}`, `${NOMBRES[seccion]} · ${nombre.toUpperCase()} ${MES_ANIO}`, `${nombre} ${MES_ANIO} · Excel, CSV o imágenes · máx. 5 MB por archivo`));
+          acc.appendChild(b);
+        } else {
+          const t = document.createElement("span");
+          t.className = "mes__tag"; t.textContent = "No disponible";
+          acc.appendChild(t);
+        }
+        row.append(main, acc);
+        mesesList.appendChild(row);
+      });
+    }
+
     function activarSeccion(nombre) {
       seccion = nombre;
-      slotCorte.appendChild(adminZone);
       fileInput.accept = ACCEPT_ORIGINAL;
       $("#t-corte").textContent = `PESO TOTAL ${NOMBRES[nombre]}`;
+      if (SECCIONES_POR_MES.includes(nombre)) {
+        /* por meses: el panel de administrador se mueve a la ventana del mes */
+        filesList.classList.add("hidden");
+        mesesList.classList.remove("hidden");
+        $("#corteIntro").textContent = `Elige un mes de ${MES_ANIO}.`;
+        pintarMeses();
+        return;
+      }
+      filesList.classList.remove("hidden");
+      mesesList.classList.add("hidden");
+      $("#corteIntro").textContent = "Archivos Excel e imágenes. Pulsa “Descargar” para guardarlos.";
+      slotCorte.appendChild(adminZone);
       filesList.innerHTML = '<div class="files__status">Cargando archivos…</div>';
       estado(uploadStatus, "Excel, CSV o imágenes · máx. 5 MB por archivo");
       cargarArchivos();
