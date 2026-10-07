@@ -296,6 +296,14 @@
 
     .menu__label { font-size: 1.6rem; font-weight: 500; letter-spacing: 0.14em; }
     .menu__desc { color: var(--muted); font-size: 0.88rem; margin-top: 0.25rem; }
+    .menu__cta {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      margin-top: 1rem; padding: 0.6rem 1.2rem;
+      border: 1px solid var(--line-strong); border-radius: 999px;
+      font-size: 0.75rem; font-weight: 500; letter-spacing: 0.14em; text-transform: uppercase;
+      transition: background 0.35s var(--ease), color 0.35s var(--ease), border-color 0.35s var(--ease);
+    }
+    .menu__item:hover .menu__cta, .menu__item:active .menu__cta { background: var(--text); color: var(--bg); border-color: var(--text); }
     .menu__arrow { transition: transform 0.4s var(--ease); }
     .menu__item:hover .menu__arrow { transform: translate(4px, -4px); }
 
@@ -397,6 +405,22 @@
       visibility: hidden;
       transition: opacity 0.4s var(--ease), visibility 0.4s;
     }
+
+    /* Candado KILAGES */
+    .menu__lock {
+      order: 2;
+      width: 32px; height: 32px;
+      display: grid; place-items: center;
+      border: 1px solid var(--line-strong);
+      border-radius: 50%;
+      color: var(--muted);
+      transition: color 0.3s, border-color 0.3s;
+    }
+    .menu__lock.is-open { color: #3ddc84; border-color: rgba(61,220,132,0.5); }
+    .lock-form { display: grid; gap: 0.25rem; }
+    .lock-form .field { margin-bottom: 0.6rem; }
+    .lock-form .btn { width: 100%; margin-top: 0.4rem; }
+    .lock-form .login__error { margin-top: 0.4rem; min-height: 1.2rem; }
     .modal.is-open { opacity: 1; visibility: visible; }
 
     .modal__box {
@@ -480,6 +504,79 @@
 
     .actions { display: flex; gap: 0.6rem; flex-wrap: wrap; }
 
+
+    /* CONTACTOS: buscador, filtros y etiqueta de tipo */
+    .cfilter { display: grid; gap: 0.8rem; }
+    .cfilter__chips { display: flex; gap: 0.6rem; flex-wrap: wrap; }
+    .chip {
+      display: inline-flex; align-items: center; gap: 0.45rem;
+      padding: 0.5rem 1rem; border: 1px solid var(--line-strong); border-radius: 999px;
+      background: transparent; color: var(--text); cursor: pointer;
+      font: 500 0.72rem var(--font-display); letter-spacing: 0.12em; text-transform: uppercase;
+      transition: background 0.3s var(--ease), color 0.3s var(--ease), border-color 0.3s var(--ease), transform 0.3s var(--ease);
+    }
+    .chip:hover { transform: translateY(-1px); border-color: var(--text); }
+    .chip:focus-visible { outline: 2px solid var(--text); outline-offset: 3px; }
+    .chip__check { width: 0; overflow: hidden; opacity: 0; transition: width 0.3s var(--ease), opacity 0.3s var(--ease); }
+    .chip[aria-pressed="true"] { background: var(--text); color: var(--bg); border-color: var(--text); }
+    .chip[aria-pressed="true"] .chip__check { width: 0.9em; opacity: 1; }
+
+    #modal-contactos .modal__box { max-width: 1180px; }
+    .ccols { display: grid; grid-template-columns: repeat(auto-fit, minmax(310px, 1fr)); gap: 1.2rem; align-items: start; }
+    .ccol { display: grid; gap: 0.8rem; min-width: 0; }
+    .ccol__title {
+      display: flex; align-items: center; justify-content: space-between; gap: 0.6rem;
+      font-size: 0.8rem; font-weight: 500; letter-spacing: 0.18em; color: var(--text);
+      padding: 0.7rem 1rem; border: 1px solid var(--line-strong); border-radius: 12px;
+      background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.02));
+      position: sticky; top: 0; z-index: 1; backdrop-filter: blur(8px);
+    }
+    .ccol[data-tipo="filetera"]  .ccol__title { border-color: rgba(143,194,255,0.45); }
+    .ccol[data-tipo="plegadora"] .ccol__title { border-color: rgba(143,224,176,0.45); }
+    .ccol[data-tipo="cortadora"] .ccol__title { border-color: rgba(255,194,122,0.45); }
+    .ccol__count { font-family: var(--font-mono); font-size: 0.72rem; color: var(--muted); letter-spacing: 0.08em; }
+    .ccol .list { max-height: 62vh; overflow-y: auto; padding-right: 0.3rem; scrollbar-width: thin; }
+    .ccol .list__row { padding: 0.75rem 0.9rem; gap: 0.7rem; }
+    @media (max-width: 900px) { .ccol .list { max-height: none; overflow: visible; } }
+
+    /* CONTACTOS: número + botón VER PESOS */
+    .contact-num { font-family: var(--font-mono); font-size: 0.8rem; color: var(--muted); letter-spacing: 0.08em; margin-right: 0.35rem; }
+    .btn--pesos {
+      background: linear-gradient(135deg, rgba(255,255,255,0.14), rgba(255,255,255,0.04));
+      border-color: var(--line-strong);
+      cursor: pointer;
+    }
+    .btn--pesos svg { transition: transform 0.45s var(--ease); }
+    .btn--pesos:hover svg { transform: rotate(-12deg) scale(1.15); }
+
+    /* CONTACTOS: edición del administrador (plegadoras y cortadoras) */
+    .pen {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 1.7rem; height: 1.7rem; margin-left: 0.45rem; padding: 0; vertical-align: middle;
+      border: 1px solid transparent; border-radius: 999px; background: transparent;
+      color: var(--muted); cursor: pointer; transition: color 0.25s var(--ease), border-color 0.25s var(--ease), background 0.25s var(--ease);
+    }
+    .pen:hover, .pen:focus-visible { color: var(--text); border-color: var(--line-strong); background: rgba(255,255,255,0.06); outline: none; }
+    .list__main span[data-tel] { display: flex; align-items: center; min-height: 1.7rem; }
+    .list__main span[data-tel].is-empty { font-style: italic; opacity: 0.55; }
+    .contact-row[data-editando="nombre"] .list__main > strong,
+    .contact-row[data-editando="tel"] .list__main > span[data-tel] { display: none; }
+    .iedit { display: grid; gap: 0.35rem; width: 100%; }
+    .iedit__row { display: flex; align-items: center; gap: 0.4rem; }
+    .iedit__row input {
+      flex: 1; min-width: 0; padding: 0.5rem 0.75rem; font: inherit; font-size: 0.9rem; color: var(--text);
+      background: rgba(255,255,255,0.05); border: 1px solid var(--line-strong); border-radius: 8px;
+    }
+    .iedit__row input:focus { outline: none; box-shadow: 0 0 0 3px rgba(255,255,255,0.08); border-color: var(--text); }
+    .ibtn {
+      flex: none; width: 2rem; height: 2rem; border-radius: 999px; cursor: pointer;
+      border: 1px solid var(--line-strong); background: transparent; color: var(--text); font-size: 0.85rem;
+    }
+    .ibtn:hover:not(:disabled) { background: var(--text); color: var(--bg); }
+    .ibtn:disabled { opacity: 0.4; cursor: default; }
+    .iedit__msg { font-size: 0.74rem; color: var(--muted); }
+    .iedit__msg.is-error { color: var(--danger); }
+
     .info-card--center { text-align: center; }
     #adminZone { display: grid; gap: 1.25rem; }
     .admin-slot:empty { display: none; }
@@ -515,9 +612,10 @@
     }
 
     @media (max-width: 900px) {
-      .menu { grid-template-columns: repeat(3, 1fr); }
-      .menu__item { min-height: 180px; padding: 1.5rem 1.25rem; }
-      .menu__label { font-size: 1.25rem; }
+      .menu { grid-template-columns: 1fr; max-width: 520px; margin-inline: auto; justify-items: stretch; }
+      .menu__item { min-height: 180px; padding: 1.5rem 1.25rem; text-align: center; align-items: center; justify-content: center; gap: 1rem; }
+      .menu__top { flex-direction: column; justify-content: center; gap: 0.6rem; }
+      .menu__label { font-size: 1.4rem; padding-left: 0.14em; }
       .codes__panel { grid-template-columns: 1fr; }
     }
     @media (max-width: 640px) {
@@ -528,6 +626,10 @@
       .modal { padding: 0; align-items: end; }
       .modal__box { max-height: 92vh; border-radius: var(--radius) var(--radius) 0 0; }
       .modal__body { padding: 1.25rem; }
+      .list__row { flex-direction: column; align-items: stretch; gap: 0.8rem; }
+      .files__info { flex: none; width: 100%; }
+      .list__row > .actions { width: 100%; }
+      .list__row > .actions .btn { flex: 1 1 auto; }
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -588,14 +690,16 @@
     <nav class="menu" aria-label="Secciones">
       <button class="menu__item reveal" style="--i:4" data-modal="modal-pesos">
         <div class="menu__top">
+          <span class="menu__lock" id="kilajesLock" aria-hidden="true" title="Acceso protegido">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
+          </span>
           <span class="menu__icon">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 3v18"/><path d="M7 21h10"/><path d="M4 7h16"/><circle cx="12" cy="4.5" r="1.5"/><path d="M6 7l-3 7a3 3 0 0 0 6 0z"/><path d="M18 7l-3 7a3 3 0 0 0 6 0z"/></svg>
           </span>
-          <span class="tag">01</span>
         </div>
         <div>
           <div class="menu__label">KILAGES</div>
-          <div class="menu__desc">Saldos y movimientos <span class="menu__arrow">→</span></div>
+          <span class="menu__cta">Abrir <span class="menu__arrow">→</span></span>
         </div>
       </button>
 
@@ -604,11 +708,10 @@
           <span class="menu__icon">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
           </span>
-          <span class="tag">02</span>
         </div>
         <div>
           <div class="menu__label">CONTACTOS</div>
-          <div class="menu__desc">Directorio de personas <span class="menu__arrow">→</span></div>
+          <span class="menu__cta">Abrir <span class="menu__arrow">→</span></span>
         </div>
       </button>
 
@@ -617,49 +720,63 @@
           <span class="menu__icon">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
           </span>
-          <span class="tag">03</span>
         </div>
         <div>
           <div class="menu__label">TURNOS</div>
-          <div class="menu__desc">Agenda y horarios <span class="menu__arrow">→</span></div>
+          <span class="menu__cta">Abrir <span class="menu__arrow">→</span></span>
         </div>
       </button>
     </nav>
 
-    <section class="codes reveal" style="--i:7" aria-labelledby="codesTitle">
-      <div class="section-head">
-        <div>
-          <span class="tag">Identificación</span>
-          <h2 id="codesTitle">CÓDIGOS DE PERSONAS</h2>
-        </div>
-        <span class="tag" id="codesCount"></span>
-      </div>
-
-      <div class="codes__panel">
-        <div class="codes__list" id="codesList"></div>
-
-        <div class="codes__viewer">
-          <div class="codes__frame" id="codesFrame">
-            <p class="codes__empty">Selecciona un código para ver su imagen</p>
+    <section class="codes reveal" style="--i:7" aria-label="Grupos">
+      <nav class="menu" aria-label="Grupos">
+        <button class="menu__item" data-grupo="fileteras" data-modal="modal-grupo">
+          <div class="menu__top"><span class="menu__icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M2 12c3-5 8-6 12-4l5-3v14l-5-3c-4 2-9 1-12-4z"/><circle cx="8" cy="11" r="0.8"/></svg></span></div>
+          <div>
+            <div class="menu__label">FILETERAS</div>
+            <span class="menu__cta">Abrir <span class="menu__arrow">→</span></span>
           </div>
-          <div class="codes__meta">
-            <div>
-              <div class="tag" id="codesSelected">—</div>
-              <div class="codes__name" id="codesName">Sin selección</div>
-            </div>
-            <a class="btn btn--small btn--solid hidden" id="downloadBtn" download>
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5"/><path d="M12 15V3"/></svg>
-              Descargar
-            </a>
+        </button>
+        <button class="menu__item" data-grupo="plegadoras" data-modal="modal-grupo">
+          <div class="menu__top"><span class="menu__icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 2 2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg></span></div>
+          <div>
+            <div class="menu__label">PLEGADORAS</div>
+            <span class="menu__cta">Abrir <span class="menu__arrow">→</span></span>
           </div>
-        </div>
-      </div>
+        </button>
+        <button class="menu__item" data-grupo="cortadoras" data-modal="modal-grupo">
+          <div class="menu__top"><span class="menu__icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M20 4 8.12 15.88M14.47 14.48 20 20M8.12 8.12 12 12"/></svg></span></div>
+          <div>
+            <div class="menu__label">CORTADORAS</div>
+            <span class="menu__cta">Abrir <span class="menu__arrow">→</span></span>
+          </div>
+        </button>
+      </nav>
     </section>
 
     <footer class="footer reveal" style="--i:8">
       <span class="tag">© KINGKASS · Todos los derechos reservados</span>
     </footer>
   </main>
+
+  <!-- MODAL: ACCESO KILAGES (candado) -->
+  <div class="modal" id="modal-candado" role="dialog" aria-modal="true" aria-labelledby="t-candado">
+    <div class="modal__box" style="max-width:420px">
+      <div class="modal__head">
+        <h3 class="modal__title" id="t-candado">🔒 ACCESO</h3>
+        <button class="modal__close" data-close aria-label="Cerrar">✕</button>
+      </div>
+      <div class="modal__body">
+        <p>Ingresa usuario y contraseña para ver los KILAGES.</p>
+        <div class="lock-form" id="lockForm">
+          <div class="field"><input type="text" id="lockUser" placeholder="Usuario" aria-label="Usuario" autocomplete="off" autocapitalize="none" spellcheck="false" /></div>
+          <div class="field"><input type="password" id="lockPass" placeholder="Contraseña" aria-label="Contraseña" autocomplete="off" /></div>
+          <button type="button" class="btn btn--solid" id="lockBtn">Entrar</button>
+          <div class="login__error" id="lockError" role="alert"></div>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <!-- MODAL: KILAGES -->
   <div class="modal" id="modal-pesos" role="dialog" aria-modal="true" aria-labelledby="t-pesos">
@@ -696,27 +813,635 @@
 
         <p>Directorio de contactos principales.</p>
 
-        <div class="list">
-          <div class="list__row">
-            <div class="list__main"><strong>Ana Torres</strong><span>+54 11 5555-0101</span></div>
+        <div class="cfilter">
+          <div class="field" style="margin:0"><input type="search" id="contactoBuscar" placeholder="Buscar por nombre o código (01-70)" aria-label="Buscar contacto por nombre o código" autocomplete="off" /></div>
+          <div class="cfilter__chips" role="group" aria-label="Filtrar por tipo">
+            <button type="button" class="chip" data-tipo="filetera" aria-pressed="false"><span class="chip__check" aria-hidden="true">✓</span>Filetera</button>
+            <button type="button" class="chip" data-tipo="plegadora" aria-pressed="false"><span class="chip__check" aria-hidden="true">✓</span>Plegadora</button>
+            <button type="button" class="chip" data-tipo="cortadora" aria-pressed="false"><span class="chip__check" aria-hidden="true">✓</span>Cortadora</button>
+          </div>
+          <div class="files__status" id="contactoStatus" role="status" aria-live="polite"></div>
+        </div>
+
+        <div class="ccols" id="contactosCols">
+        <section class="ccol" data-tipo="filetera">
+          <h4 class="ccol__title">FILETERAS <span class="ccol__count" data-count></span></h4>
+          <div class="list">
+          <div class="list__row contact-row">
+            <div class="list__main"><strong><span class="contact-num">(01)</span> Ana Torres</strong><span>+54 11 5555-0101</span></div>
             <div class="actions">
-              <a class="btn btn--small" href="tel:+541155550101">Llamar</a>
-              <a class="btn btn--small" href="https://wa.me/541155550101" target="_blank" rel="noopener">WhatsApp</a>
+              <button type="button" class="btn btn--small btn--pesos" data-ver-pesos><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v18M5 7h14M5 7l-3 8a4 4 0 0 0 6 0L5 7zm14 0l-3 8a4 4 0 0 0 6 0l-3-8z"/></svg>VER PESOS</button>
             </div>
           </div>
-          <div class="list__row">
-            <div class="list__main"><strong>Martín Ruiz</strong><span>+54 11 5555-0102</span></div>
+          <div class="list__row contact-row">
+            <div class="list__main"><strong><span class="contact-num">(02)</span> Martín Ruiz</strong><span>+54 11 5555-0102</span></div>
             <div class="actions">
-              <a class="btn btn--small" href="tel:+541155550102">Llamar</a>
-              <a class="btn btn--small" href="https://wa.me/541155550102" target="_blank" rel="noopener">WhatsApp</a>
+              <button type="button" class="btn btn--small btn--pesos" data-ver-pesos><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v18M5 7h14M5 7l-3 8a4 4 0 0 0 6 0L5 7zm14 0l-3 8a4 4 0 0 0 6 0l-3-8z"/></svg>VER PESOS</button>
             </div>
           </div>
-          <div class="list__row">
-            <div class="list__main"><strong>Lucía Gómez</strong><span>lucia@ejemplo.com</span></div>
+          <div class="list__row contact-row">
+            <div class="list__main"><strong><span class="contact-num">(03)</span> Carolina Aguirre</strong><span>+54 11 6974-8385</span></div>
             <div class="actions">
-              <a class="btn btn--small" href="mailto:lucia@ejemplo.com">Email</a>
+              <button type="button" class="btn btn--small btn--pesos" data-ver-pesos><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v18M5 7h14M5 7l-3 8a4 4 0 0 0 6 0L5 7zm14 0l-3 8a4 4 0 0 0 6 0l-3-8z"/></svg>VER PESOS</button>
             </div>
           </div>
+          <div class="list__row contact-row">
+            <div class="list__main"><strong><span class="contact-num">(04)</span> Florencia Flores</strong><span>+54 11 6636-9118</span></div>
+            <div class="actions">
+              <button type="button" class="btn btn--small btn--pesos" data-ver-pesos><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v18M5 7h14M5 7l-3 8a4 4 0 0 0 6 0L5 7zm14 0l-3 8a4 4 0 0 0 6 0l-3-8z"/></svg>VER PESOS</button>
+            </div>
+          </div>
+          <div class="list__row contact-row">
+            <div class="list__main"><strong><span class="contact-num">(05)</span> Belén Navarro</strong><span>+54 11 6862-8042</span></div>
+            <div class="actions">
+              <button type="button" class="btn btn--small btn--pesos" data-ver-pesos><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v18M5 7h14M5 7l-3 8a4 4 0 0 0 6 0L5 7zm14 0l-3 8a4 4 0 0 0 6 0l-3-8z"/></svg>VER PESOS</button>
+            </div>
+          </div>
+          <div class="list__row contact-row">
+            <div class="list__main"><strong><span class="contact-num">(06)</span> Iván Benítez</strong><span>+54 11 2628-1322</span></div>
+            <div class="actions">
+              <button type="button" class="btn btn--small btn--pesos" data-ver-pesos><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v18M5 7h14M5 7l-3 8a4 4 0 0 0 6 0L5 7zm14 0l-3 8a4 4 0 0 0 6 0l-3-8z"/></svg>VER PESOS</button>
+            </div>
+          </div>
+          <div class="list__row contact-row">
+            <div class="list__main"><strong><span class="contact-num">(07)</span> Gonzalo Herrera</strong><span>+54 11 8100-7367</span></div>
+            <div class="actions">
+              <button type="button" class="btn btn--small btn--pesos" data-ver-pesos><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v18M5 7h14M5 7l-3 8a4 4 0 0 0 6 0L5 7zm14 0l-3 8a4 4 0 0 0 6 0l-3-8z"/></svg>VER PESOS</button>
+            </div>
+          </div>
+          <div class="list__row contact-row">
+            <div class="list__main"><strong><span class="contact-num">(08)</span> Sofía Cabrera</strong><span>+54 11 7321-3444</span></div>
+            <div class="actions">
+              <button type="button" class="btn btn--small btn--pesos" data-ver-pesos><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v18M5 7h14M5 7l-3 8a4 4 0 0 0 6 0L5 7zm14 0l-3 8a4 4 0 0 0 6 0l-3-8z"/></svg>VER PESOS</button>
+            </div>
+          </div>
+          <div class="list__row contact-row">
+            <div class="list__main"><strong><span class="contact-num">(09)</span> Ezequiel Acosta</strong><span>+54 11 4951-5843</span></div>
+            <div class="actions">
+              <button type="button" class="btn btn--small btn--pesos" data-ver-pesos><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v18M5 7h14M5 7l-3 8a4 4 0 0 0 6 0L5 7zm14 0l-3 8a4 4 0 0 0 6 0l-3-8z"/></svg>VER PESOS</button>
+            </div>
+          </div>
+          <div class="list__row contact-row">
+            <div class="list__main"><strong><span class="contact-num">(10)</span> Gastón Vargas</strong><span>+54 11 7078-5577</span></div>
+            <div class="actions">
+              <button type="button" class="btn btn--small btn--pesos" data-ver-pesos><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v18M5 7h14M5 7l-3 8a4 4 0 0 0 6 0L5 7zm14 0l-3 8a4 4 0 0 0 6 0l-3-8z"/></svg>VER PESOS</button>
+            </div>
+          </div>
+          <div class="list__row contact-row">
+            <div class="list__main"><strong><span class="contact-num">(11)</span> Agustina Correa</strong><span>+54 11 6299-4712</span></div>
+            <div class="actions">
+              <button type="button" class="btn btn--small btn--pesos" data-ver-pesos><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v18M5 7h14M5 7l-3 8a4 4 0 0 0 6 0L5 7zm14 0l-3 8a4 4 0 0 0 6 0l-3-8z"/></svg>VER PESOS</button>
+            </div>
+          </div>
+          <div class="list__row contact-row">
+            <div class="list__main"><strong><span class="contact-num">(12)</span> Walter Sosa</strong><span>+54 11 7720-9460</span></div>
+            <div class="actions">
+              <button type="button" class="btn btn--small btn--pesos" data-ver-pesos><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v18M5 7h14M5 7l-3 8a4 4 0 0 0 6 0L5 7zm14 0l-3 8a4 4 0 0 0 6 0l-3-8z"/></svg>VER PESOS</button>
+            </div>
+          </div>
+          <div class="list__row contact-row">
+            <div class="list__main"><strong><span class="contact-num">(13)</span> Rocío Rodríguez</strong><span>+54 11 8727-6043</span></div>
+            <div class="actions">
+              <button type="button" class="btn btn--small btn--pesos" data-ver-pesos><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v18M5 7h14M5 7l-3 8a4 4 0 0 0 6 0L5 7zm14 0l-3 8a4 4 0 0 0 6 0l-3-8z"/></svg>VER PESOS</button>
+            </div>
+          </div>
+          <div class="list__row contact-row">
+            <div class="list__main"><strong><span class="contact-num">(14)</span> Cristian Morales</strong><span>+54 11 5092-6533</span></div>
+            <div class="actions">
+              <button type="button" class="btn btn--small btn--pesos" data-ver-pesos><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v18M5 7h14M5 7l-3 8a4 4 0 0 0 6 0L5 7zm14 0l-3 8a4 4 0 0 0 6 0l-3-8z"/></svg>VER PESOS</button>
+            </div>
+          </div>
+          <div class="list__row contact-row">
+            <div class="list__main"><strong><span class="contact-num">(15)</span> Elena Pérez</strong><span>+54 11 5518-9833</span></div>
+            <div class="actions">
+              <button type="button" class="btn btn--small btn--pesos" data-ver-pesos><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v18M5 7h14M5 7l-3 8a4 4 0 0 0 6 0L5 7zm14 0l-3 8a4 4 0 0 0 6 0l-3-8z"/></svg>VER PESOS</button>
+            </div>
+          </div>
+          <div class="list__row contact-row">
+            <div class="list__main"><strong><span class="contact-num">(16)</span> Óscar Ortiz</strong><span>+54 11 6264-6880</span></div>
+            <div class="actions">
+              <button type="button" class="btn btn--small btn--pesos" data-ver-pesos><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v18M5 7h14M5 7l-3 8a4 4 0 0 0 6 0L5 7zm14 0l-3 8a4 4 0 0 0 6 0l-3-8z"/></svg>VER PESOS</button>
+            </div>
+          </div>
+          <div class="list__row contact-row">
+            <div class="list__main"><strong><span class="contact-num">(17)</span> Tamara Vargas</strong><span>+54 11 6824-0415</span></div>
+            <div class="actions">
+              <button type="button" class="btn btn--small btn--pesos" data-ver-pesos><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v18M5 7h14M5 7l-3 8a4 4 0 0 0 6 0L5 7zm14 0l-3 8a4 4 0 0 0 6 0l-3-8z"/></svg>VER PESOS</button>
+            </div>
+          </div>
+          <div class="list__row contact-row">
+            <div class="list__main"><strong><span class="contact-num">(18)</span> Diego Romero</strong><span>+54 11 8050-8572</span></div>
+            <div class="actions">
+              <button type="button" class="btn btn--small btn--pesos" data-ver-pesos><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v18M5 7h14M5 7l-3 8a4 4 0 0 0 6 0L5 7zm14 0l-3 8a4 4 0 0 0 6 0l-3-8z"/></svg>VER PESOS</button>
+            </div>
+          </div>
+          <div class="list__row contact-row">
+            <div class="list__main"><strong><span class="contact-num">(19)</span> Florencia Paz</strong><span>+54 11 5481-2333</span></div>
+            <div class="actions">
+              <button type="button" class="btn btn--small btn--pesos" data-ver-pesos><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v18M5 7h14M5 7l-3 8a4 4 0 0 0 6 0L5 7zm14 0l-3 8a4 4 0 0 0 6 0l-3-8z"/></svg>VER PESOS</button>
+            </div>
+          </div>
+          <div class="list__row contact-row">
+            <div class="list__main"><strong><span class="contact-num">(20)</span> Tamara Flores</strong><span>+54 11 8907-1999</span></div>
+            <div class="actions">
+              <button type="button" class="btn btn--small btn--pesos" data-ver-pesos><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v18M5 7h14M5 7l-3 8a4 4 0 0 0 6 0L5 7zm14 0l-3 8a4 4 0 0 0 6 0l-3-8z"/></svg>VER PESOS</button>
+            </div>
+          </div>
+          <div class="list__row contact-row">
+            <div class="list__main"><strong><span class="contact-num">(21)</span> Walter Ríos</strong><span>+54 11 7951-8939</span></div>
+            <div class="actions">
+              <button type="button" class="btn btn--small btn--pesos" data-ver-pesos><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v18M5 7h14M5 7l-3 8a4 4 0 0 0 6 0L5 7zm14 0l-3 8a4 4 0 0 0 6 0l-3-8z"/></svg>VER PESOS</button>
+            </div>
+          </div>
+          <div class="list__row contact-row">
+            <div class="list__main"><strong><span class="contact-num">(22)</span> Maximiliano Correa</strong><span>+54 11 5685-5040</span></div>
+            <div class="actions">
+              <button type="button" class="btn btn--small btn--pesos" data-ver-pesos><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v18M5 7h14M5 7l-3 8a4 4 0 0 0 6 0L5 7zm14 0l-3 8a4 4 0 0 0 6 0l-3-8z"/></svg>VER PESOS</button>
+            </div>
+          </div>
+          <div class="list__row contact-row">
+            <div class="list__main"><strong><span class="contact-num">(23)</span> Julián Ríos</strong><span>+54 11 8905-6585</span></div>
+            <div class="actions">
+              <button type="button" class="btn btn--small btn--pesos" data-ver-pesos><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v18M5 7h14M5 7l-3 8a4 4 0 0 0 6 0L5 7zm14 0l-3 8a4 4 0 0 0 6 0l-3-8z"/></svg>VER PESOS</button>
+            </div>
+          </div>
+          <div class="list__row contact-row">
+            <div class="list__main"><strong><span class="contact-num">(24)</span> Pilar Ruiz</strong><span>+54 11 4851-4407</span></div>
+            <div class="actions">
+              <button type="button" class="btn btn--small btn--pesos" data-ver-pesos><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v18M5 7h14M5 7l-3 8a4 4 0 0 0 6 0L5 7zm14 0l-3 8a4 4 0 0 0 6 0l-3-8z"/></svg>VER PESOS</button>
+            </div>
+          </div>
+          <div class="list__row contact-row">
+            <div class="list__main"><strong><span class="contact-num">(25)</span> Sofía Gómez</strong><span>+54 11 3671-9785</span></div>
+            <div class="actions">
+              <button type="button" class="btn btn--small btn--pesos" data-ver-pesos><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v18M5 7h14M5 7l-3 8a4 4 0 0 0 6 0L5 7zm14 0l-3 8a4 4 0 0 0 6 0l-3-8z"/></svg>VER PESOS</button>
+            </div>
+          </div>
+          <div class="list__row contact-row">
+            <div class="list__main"><strong><span class="contact-num">(26)</span> Walter Luna</strong><span>+54 11 5368-3274</span></div>
+            <div class="actions">
+              <button type="button" class="btn btn--small btn--pesos" data-ver-pesos><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v18M5 7h14M5 7l-3 8a4 4 0 0 0 6 0L5 7zm14 0l-3 8a4 4 0 0 0 6 0l-3-8z"/></svg>VER PESOS</button>
+            </div>
+          </div>
+          <div class="list__row contact-row">
+            <div class="list__main"><strong><span class="contact-num">(27)</span> Celeste Cabrera</strong><span>+54 11 5523-8145</span></div>
+            <div class="actions">
+              <button type="button" class="btn btn--small btn--pesos" data-ver-pesos><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v18M5 7h14M5 7l-3 8a4 4 0 0 0 6 0L5 7zm14 0l-3 8a4 4 0 0 0 6 0l-3-8z"/></svg>VER PESOS</button>
+            </div>
+          </div>
+          <div class="list__row contact-row">
+            <div class="list__main"><strong><span class="contact-num">(28)</span> Pilar Correa</strong><span>+54 11 7929-0550</span></div>
+            <div class="actions">
+              <button type="button" class="btn btn--small btn--pesos" data-ver-pesos><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v18M5 7h14M5 7l-3 8a4 4 0 0 0 6 0L5 7zm14 0l-3 8a4 4 0 0 0 6 0l-3-8z"/></svg>VER PESOS</button>
+            </div>
+          </div>
+          <div class="list__row contact-row">
+            <div class="list__main"><strong><span class="contact-num">(29)</span> Gabriela Aguirre</strong><span>+54 11 5938-1611</span></div>
+            <div class="actions">
+              <button type="button" class="btn btn--small btn--pesos" data-ver-pesos><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v18M5 7h14M5 7l-3 8a4 4 0 0 0 6 0L5 7zm14 0l-3 8a4 4 0 0 0 6 0l-3-8z"/></svg>VER PESOS</button>
+            </div>
+          </div>
+          <div class="list__row contact-row">
+            <div class="list__main"><strong><span class="contact-num">(30)</span> Iván Vargas</strong><span>+54 11 4463-2999</span></div>
+            <div class="actions">
+              <button type="button" class="btn btn--small btn--pesos" data-ver-pesos><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v18M5 7h14M5 7l-3 8a4 4 0 0 0 6 0L5 7zm14 0l-3 8a4 4 0 0 0 6 0l-3-8z"/></svg>VER PESOS</button>
+            </div>
+          </div>
+          <div class="list__row contact-row">
+            <div class="list__main"><strong><span class="contact-num">(31)</span> Andrés Ríos</strong><span>+54 11 2664-4365</span></div>
+            <div class="actions">
+              <button type="button" class="btn btn--small btn--pesos" data-ver-pesos><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v18M5 7h14M5 7l-3 8a4 4 0 0 0 6 0L5 7zm14 0l-3 8a4 4 0 0 0 6 0l-3-8z"/></svg>VER PESOS</button>
+            </div>
+          </div>
+          <div class="list__row contact-row">
+            <div class="list__main"><strong><span class="contact-num">(32)</span> Elena Peralta</strong><span>+54 11 2199-6738</span></div>
+            <div class="actions">
+              <button type="button" class="btn btn--small btn--pesos" data-ver-pesos><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v18M5 7h14M5 7l-3 8a4 4 0 0 0 6 0L5 7zm14 0l-3 8a4 4 0 0 0 6 0l-3-8z"/></svg>VER PESOS</button>
+            </div>
+          </div>
+          <div class="list__row contact-row">
+            <div class="list__main"><strong><span class="contact-num">(33)</span> Ignacio Molina</strong><span>+54 11 2094-0003</span></div>
+            <div class="actions">
+              <button type="button" class="btn btn--small btn--pesos" data-ver-pesos><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v18M5 7h14M5 7l-3 8a4 4 0 0 0 6 0L5 7zm14 0l-3 8a4 4 0 0 0 6 0l-3-8z"/></svg>VER PESOS</button>
+            </div>
+          </div>
+          <div class="list__row contact-row">
+            <div class="list__main"><strong><span class="contact-num">(34)</span> Noelia Vega</strong><span>+54 11 6954-1360</span></div>
+            <div class="actions">
+              <button type="button" class="btn btn--small btn--pesos" data-ver-pesos><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v18M5 7h14M5 7l-3 8a4 4 0 0 0 6 0L5 7zm14 0l-3 8a4 4 0 0 0 6 0l-3-8z"/></svg>VER PESOS</button>
+            </div>
+          </div>
+          <div class="list__row contact-row">
+            <div class="list__main"><strong><span class="contact-num">(35)</span> Lorena Benítez</strong><span>+54 11 2635-0731</span></div>
+            <div class="actions">
+              <button type="button" class="btn btn--small btn--pesos" data-ver-pesos><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v18M5 7h14M5 7l-3 8a4 4 0 0 0 6 0L5 7zm14 0l-3 8a4 4 0 0 0 6 0l-3-8z"/></svg>VER PESOS</button>
+            </div>
+          </div>
+          <div class="list__row contact-row">
+            <div class="list__main"><strong><span class="contact-num">(36)</span> Leandro Gutiérrez</strong><span>+54 11 3005-5135</span></div>
+            <div class="actions">
+              <button type="button" class="btn btn--small btn--pesos" data-ver-pesos><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v18M5 7h14M5 7l-3 8a4 4 0 0 0 6 0L5 7zm14 0l-3 8a4 4 0 0 0 6 0l-3-8z"/></svg>VER PESOS</button>
+            </div>
+          </div>
+          <div class="list__row contact-row">
+            <div class="list__main"><strong><span class="contact-num">(37)</span> Óscar Romero</strong><span>+54 11 6228-7749</span></div>
+            <div class="actions">
+              <button type="button" class="btn btn--small btn--pesos" data-ver-pesos><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v18M5 7h14M5 7l-3 8a4 4 0 0 0 6 0L5 7zm14 0l-3 8a4 4 0 0 0 6 0l-3-8z"/></svg>VER PESOS</button>
+            </div>
+          </div>
+          <div class="list__row contact-row">
+            <div class="list__main"><strong><span class="contact-num">(38)</span> Emiliano Ibarra</strong><span>+54 11 7516-4762</span></div>
+            <div class="actions">
+              <button type="button" class="btn btn--small btn--pesos" data-ver-pesos><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v18M5 7h14M5 7l-3 8a4 4 0 0 0 6 0L5 7zm14 0l-3 8a4 4 0 0 0 6 0l-3-8z"/></svg>VER PESOS</button>
+            </div>
+          </div>
+          <div class="list__row contact-row">
+            <div class="list__main"><strong><span class="contact-num">(39)</span> Santiago Silva</strong><span>+54 11 7163-2217</span></div>
+            <div class="actions">
+              <button type="button" class="btn btn--small btn--pesos" data-ver-pesos><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v18M5 7h14M5 7l-3 8a4 4 0 0 0 6 0L5 7zm14 0l-3 8a4 4 0 0 0 6 0l-3-8z"/></svg>VER PESOS</button>
+            </div>
+          </div>
+          <div class="list__row contact-row">
+            <div class="list__main"><strong><span class="contact-num">(40)</span> Rocío Vargas</strong><span>+54 11 5399-2433</span></div>
+            <div class="actions">
+              <button type="button" class="btn btn--small btn--pesos" data-ver-pesos><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v18M5 7h14M5 7l-3 8a4 4 0 0 0 6 0L5 7zm14 0l-3 8a4 4 0 0 0 6 0l-3-8z"/></svg>VER PESOS</button>
+            </div>
+          </div>
+          <div class="list__row contact-row">
+            <div class="list__main"><strong><span class="contact-num">(41)</span> Nahuel Ruiz</strong><span>+54 11 5014-1738</span></div>
+            <div class="actions">
+              <button type="button" class="btn btn--small btn--pesos" data-ver-pesos><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v18M5 7h14M5 7l-3 8a4 4 0 0 0 6 0L5 7zm14 0l-3 8a4 4 0 0 0 6 0l-3-8z"/></svg>VER PESOS</button>
+            </div>
+          </div>
+          <div class="list__row contact-row">
+            <div class="list__main"><strong><span class="contact-num">(42)</span> Milagros López</strong><span>+54 11 2853-5685</span></div>
+            <div class="actions">
+              <button type="button" class="btn btn--small btn--pesos" data-ver-pesos><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v18M5 7h14M5 7l-3 8a4 4 0 0 0 6 0L5 7zm14 0l-3 8a4 4 0 0 0 6 0l-3-8z"/></svg>VER PESOS</button>
+            </div>
+          </div>
+          <div class="list__row contact-row">
+            <div class="list__main"><strong><span class="contact-num">(43)</span> Brenda Rodríguez</strong><span>+54 11 2522-7799</span></div>
+            <div class="actions">
+              <button type="button" class="btn btn--small btn--pesos" data-ver-pesos><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v18M5 7h14M5 7l-3 8a4 4 0 0 0 6 0L5 7zm14 0l-3 8a4 4 0 0 0 6 0l-3-8z"/></svg>VER PESOS</button>
+            </div>
+          </div>
+          <div class="list__row contact-row">
+            <div class="list__main"><strong><span class="contact-num">(44)</span> Verónica Suárez</strong><span>+54 11 5333-1988</span></div>
+            <div class="actions">
+              <button type="button" class="btn btn--small btn--pesos" data-ver-pesos><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v18M5 7h14M5 7l-3 8a4 4 0 0 0 6 0L5 7zm14 0l-3 8a4 4 0 0 0 6 0l-3-8z"/></svg>VER PESOS</button>
+            </div>
+          </div>
+          <div class="list__row contact-row">
+            <div class="list__main"><strong><span class="contact-num">(45)</span> Elena Morales</strong><span>+54 11 6633-2797</span></div>
+            <div class="actions">
+              <button type="button" class="btn btn--small btn--pesos" data-ver-pesos><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v18M5 7h14M5 7l-3 8a4 4 0 0 0 6 0L5 7zm14 0l-3 8a4 4 0 0 0 6 0l-3-8z"/></svg>VER PESOS</button>
+            </div>
+          </div>
+          <div class="list__row contact-row">
+            <div class="list__main"><strong><span class="contact-num">(46)</span> Luciana Vega</strong><span>+54 11 6211-7104</span></div>
+            <div class="actions">
+              <button type="button" class="btn btn--small btn--pesos" data-ver-pesos><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v18M5 7h14M5 7l-3 8a4 4 0 0 0 6 0L5 7zm14 0l-3 8a4 4 0 0 0 6 0l-3-8z"/></svg>VER PESOS</button>
+            </div>
+          </div>
+          <div class="list__row contact-row">
+            <div class="list__main"><strong><span class="contact-num">(47)</span> Soledad Morales</strong><span>+54 11 6238-1138</span></div>
+            <div class="actions">
+              <button type="button" class="btn btn--small btn--pesos" data-ver-pesos><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v18M5 7h14M5 7l-3 8a4 4 0 0 0 6 0L5 7zm14 0l-3 8a4 4 0 0 0 6 0l-3-8z"/></svg>VER PESOS</button>
+            </div>
+          </div>
+          <div class="list__row contact-row">
+            <div class="list__main"><strong><span class="contact-num">(48)</span> Candela Gómez</strong><span>+54 11 3662-2840</span></div>
+            <div class="actions">
+              <button type="button" class="btn btn--small btn--pesos" data-ver-pesos><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v18M5 7h14M5 7l-3 8a4 4 0 0 0 6 0L5 7zm14 0l-3 8a4 4 0 0 0 6 0l-3-8z"/></svg>VER PESOS</button>
+            </div>
+          </div>
+          <div class="list__row contact-row">
+            <div class="list__main"><strong><span class="contact-num">(49)</span> Camila Domínguez</strong><span>+54 11 8049-7402</span></div>
+            <div class="actions">
+              <button type="button" class="btn btn--small btn--pesos" data-ver-pesos><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v18M5 7h14M5 7l-3 8a4 4 0 0 0 6 0L5 7zm14 0l-3 8a4 4 0 0 0 6 0l-3-8z"/></svg>VER PESOS</button>
+            </div>
+          </div>
+          <div class="list__row contact-row">
+            <div class="list__main"><strong><span class="contact-num">(50)</span> Federico Ríos</strong><span>+54 11 7694-0335</span></div>
+            <div class="actions">
+              <button type="button" class="btn btn--small btn--pesos" data-ver-pesos><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v18M5 7h14M5 7l-3 8a4 4 0 0 0 6 0L5 7zm14 0l-3 8a4 4 0 0 0 6 0l-3-8z"/></svg>VER PESOS</button>
+            </div>
+          </div>
+          <div class="list__row contact-row">
+            <div class="list__main"><strong><span class="contact-num">(51)</span> Emiliano Luna</strong><span>+54 11 3804-8468</span></div>
+            <div class="actions">
+              <button type="button" class="btn btn--small btn--pesos" data-ver-pesos><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v18M5 7h14M5 7l-3 8a4 4 0 0 0 6 0L5 7zm14 0l-3 8a4 4 0 0 0 6 0l-3-8z"/></svg>VER PESOS</button>
+            </div>
+          </div>
+          <div class="list__row contact-row">
+            <div class="list__main"><strong><span class="contact-num">(52)</span> Daniela Álvarez</strong><span>+54 11 7864-3047</span></div>
+            <div class="actions">
+              <button type="button" class="btn btn--small btn--pesos" data-ver-pesos><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v18M5 7h14M5 7l-3 8a4 4 0 0 0 6 0L5 7zm14 0l-3 8a4 4 0 0 0 6 0l-3-8z"/></svg>VER PESOS</button>
+            </div>
+          </div>
+          <div class="list__row contact-row">
+            <div class="list__main"><strong><span class="contact-num">(53)</span> Milagros Medina</strong><span>+54 11 5545-6784</span></div>
+            <div class="actions">
+              <button type="button" class="btn btn--small btn--pesos" data-ver-pesos><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v18M5 7h14M5 7l-3 8a4 4 0 0 0 6 0L5 7zm14 0l-3 8a4 4 0 0 0 6 0l-3-8z"/></svg>VER PESOS</button>
+            </div>
+          </div>
+          <div class="list__row contact-row">
+            <div class="list__main"><strong><span class="contact-num">(54)</span> Santiago Castro</strong><span>+54 11 4191-5637</span></div>
+            <div class="actions">
+              <button type="button" class="btn btn--small btn--pesos" data-ver-pesos><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v18M5 7h14M5 7l-3 8a4 4 0 0 0 6 0L5 7zm14 0l-3 8a4 4 0 0 0 6 0l-3-8z"/></svg>VER PESOS</button>
+            </div>
+          </div>
+          <div class="list__row contact-row">
+            <div class="list__main"><strong><span class="contact-num">(55)</span> Bruno Acosta</strong><span>+54 11 5509-6811</span></div>
+            <div class="actions">
+              <button type="button" class="btn btn--small btn--pesos" data-ver-pesos><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v18M5 7h14M5 7l-3 8a4 4 0 0 0 6 0L5 7zm14 0l-3 8a4 4 0 0 0 6 0l-3-8z"/></svg>VER PESOS</button>
+            </div>
+          </div>
+          <div class="list__row contact-row">
+            <div class="list__main"><strong><span class="contact-num">(56)</span> Hernán Morales</strong><span>+54 11 3333-8508</span></div>
+            <div class="actions">
+              <button type="button" class="btn btn--small btn--pesos" data-ver-pesos><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v18M5 7h14M5 7l-3 8a4 4 0 0 0 6 0L5 7zm14 0l-3 8a4 4 0 0 0 6 0l-3-8z"/></svg>VER PESOS</button>
+            </div>
+          </div>
+          <div class="list__row contact-row">
+            <div class="list__main"><strong><span class="contact-num">(57)</span> Tamara Molina</strong><span>+54 11 2539-8596</span></div>
+            <div class="actions">
+              <button type="button" class="btn btn--small btn--pesos" data-ver-pesos><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v18M5 7h14M5 7l-3 8a4 4 0 0 0 6 0L5 7zm14 0l-3 8a4 4 0 0 0 6 0l-3-8z"/></svg>VER PESOS</button>
+            </div>
+          </div>
+          <div class="list__row contact-row">
+            <div class="list__main"><strong><span class="contact-num">(58)</span> Antonella Martínez</strong><span>+54 11 8219-3790</span></div>
+            <div class="actions">
+              <button type="button" class="btn btn--small btn--pesos" data-ver-pesos><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v18M5 7h14M5 7l-3 8a4 4 0 0 0 6 0L5 7zm14 0l-3 8a4 4 0 0 0 6 0l-3-8z"/></svg>VER PESOS</button>
+            </div>
+          </div>
+          <div class="list__row contact-row">
+            <div class="list__main"><strong><span class="contact-num">(59)</span> Lucas Díaz</strong><span>+54 11 5661-5413</span></div>
+            <div class="actions">
+              <button type="button" class="btn btn--small btn--pesos" data-ver-pesos><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v18M5 7h14M5 7l-3 8a4 4 0 0 0 6 0L5 7zm14 0l-3 8a4 4 0 0 0 6 0l-3-8z"/></svg>VER PESOS</button>
+            </div>
+          </div>
+          <div class="list__row contact-row">
+            <div class="list__main"><strong><span class="contact-num">(60)</span> Marcos Domínguez</strong><span>+54 11 8853-2989</span></div>
+            <div class="actions">
+              <button type="button" class="btn btn--small btn--pesos" data-ver-pesos><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v18M5 7h14M5 7l-3 8a4 4 0 0 0 6 0L5 7zm14 0l-3 8a4 4 0 0 0 6 0l-3-8z"/></svg>VER PESOS</button>
+            </div>
+          </div>
+          <div class="list__row contact-row">
+            <div class="list__main"><strong><span class="contact-num">(61)</span> Valentina Gutiérrez</strong><span>+54 11 8160-5762</span></div>
+            <div class="actions">
+              <button type="button" class="btn btn--small btn--pesos" data-ver-pesos><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v18M5 7h14M5 7l-3 8a4 4 0 0 0 6 0L5 7zm14 0l-3 8a4 4 0 0 0 6 0l-3-8z"/></svg>VER PESOS</button>
+            </div>
+          </div>
+          <div class="list__row contact-row">
+            <div class="list__main"><strong><span class="contact-num">(62)</span> Paula Pérez</strong><span>+54 11 6733-4595</span></div>
+            <div class="actions">
+              <button type="button" class="btn btn--small btn--pesos" data-ver-pesos><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v18M5 7h14M5 7l-3 8a4 4 0 0 0 6 0L5 7zm14 0l-3 8a4 4 0 0 0 6 0l-3-8z"/></svg>VER PESOS</button>
+            </div>
+          </div>
+          <div class="list__row contact-row">
+            <div class="list__main"><strong><span class="contact-num">(63)</span> Paula Navarro</strong><span>+54 11 4576-4392</span></div>
+            <div class="actions">
+              <button type="button" class="btn btn--small btn--pesos" data-ver-pesos><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v18M5 7h14M5 7l-3 8a4 4 0 0 0 6 0L5 7zm14 0l-3 8a4 4 0 0 0 6 0l-3-8z"/></svg>VER PESOS</button>
+            </div>
+          </div>
+          <div class="list__row contact-row">
+            <div class="list__main"><strong><span class="contact-num">(64)</span> Emiliano Martínez</strong><span>+54 11 8270-1579</span></div>
+            <div class="actions">
+              <button type="button" class="btn btn--small btn--pesos" data-ver-pesos><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v18M5 7h14M5 7l-3 8a4 4 0 0 0 6 0L5 7zm14 0l-3 8a4 4 0 0 0 6 0l-3-8z"/></svg>VER PESOS</button>
+            </div>
+          </div>
+          <div class="list__row contact-row">
+            <div class="list__main"><strong><span class="contact-num">(65)</span> Pilar Álvarez</strong><span>+54 11 2700-0990</span></div>
+            <div class="actions">
+              <button type="button" class="btn btn--small btn--pesos" data-ver-pesos><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v18M5 7h14M5 7l-3 8a4 4 0 0 0 6 0L5 7zm14 0l-3 8a4 4 0 0 0 6 0l-3-8z"/></svg>VER PESOS</button>
+            </div>
+          </div>
+          <div class="list__row contact-row">
+            <div class="list__main"><strong><span class="contact-num">(66)</span> Brenda Torres</strong><span>+54 11 7645-1741</span></div>
+            <div class="actions">
+              <button type="button" class="btn btn--small btn--pesos" data-ver-pesos><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v18M5 7h14M5 7l-3 8a4 4 0 0 0 6 0L5 7zm14 0l-3 8a4 4 0 0 0 6 0l-3-8z"/></svg>VER PESOS</button>
+            </div>
+          </div>
+          <div class="list__row contact-row">
+            <div class="list__main"><strong><span class="contact-num">(67)</span> Julián Aguirre</strong><span>+54 11 4602-1047</span></div>
+            <div class="actions">
+              <button type="button" class="btn btn--small btn--pesos" data-ver-pesos><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v18M5 7h14M5 7l-3 8a4 4 0 0 0 6 0L5 7zm14 0l-3 8a4 4 0 0 0 6 0l-3-8z"/></svg>VER PESOS</button>
+            </div>
+          </div>
+          <div class="list__row contact-row">
+            <div class="list__main"><strong><span class="contact-num">(68)</span> Franco Acosta</strong><span>+54 11 4064-0227</span></div>
+            <div class="actions">
+              <button type="button" class="btn btn--small btn--pesos" data-ver-pesos><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v18M5 7h14M5 7l-3 8a4 4 0 0 0 6 0L5 7zm14 0l-3 8a4 4 0 0 0 6 0l-3-8z"/></svg>VER PESOS</button>
+            </div>
+          </div>
+          <div class="list__row contact-row">
+            <div class="list__main"><strong><span class="contact-num">(69)</span> Marcos Acosta</strong><span>+54 11 5988-0252</span></div>
+            <div class="actions">
+              <button type="button" class="btn btn--small btn--pesos" data-ver-pesos><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v18M5 7h14M5 7l-3 8a4 4 0 0 0 6 0L5 7zm14 0l-3 8a4 4 0 0 0 6 0l-3-8z"/></svg>VER PESOS</button>
+            </div>
+          </div>
+          <div class="list__row contact-row">
+            <div class="list__main"><strong><span class="contact-num">(70)</span> Martina Martínez</strong><span>+54 11 3023-5077</span></div>
+            <div class="actions">
+              <button type="button" class="btn btn--small btn--pesos" data-ver-pesos><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v18M5 7h14M5 7l-3 8a4 4 0 0 0 6 0L5 7zm14 0l-3 8a4 4 0 0 0 6 0l-3-8z"/></svg>VER PESOS</button>
+            </div>
+          </div>
+          </div>
+          <div class="files__status ccol__empty hidden">Sin resultados</div>
+        </section>
+        <section class="ccol" data-tipo="plegadora">
+          <h4 class="ccol__title">PLEGADORAS <span class="ccol__count" data-count></span></h4>
+          <div class="list">
+          <div class="list__row contact-row">
+            <div class="list__main"><strong><span class="contact-num">(01)</span> Lucas Silva</strong></div>
+            <div class="actions">
+              <button type="button" class="btn btn--small btn--pesos" data-ver-pesos><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v18M5 7h14M5 7l-3 8a4 4 0 0 0 6 0L5 7zm14 0l-3 8a4 4 0 0 0 6 0l-3-8z"/></svg>VER PESOS</button>
+            </div>
+          </div>
+          <div class="list__row contact-row">
+            <div class="list__main"><strong><span class="contact-num">(02)</span> Axel Silva</strong></div>
+            <div class="actions">
+              <button type="button" class="btn btn--small btn--pesos" data-ver-pesos><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v18M5 7h14M5 7l-3 8a4 4 0 0 0 6 0L5 7zm14 0l-3 8a4 4 0 0 0 6 0l-3-8z"/></svg>VER PESOS</button>
+            </div>
+          </div>
+          <div class="list__row contact-row">
+            <div class="list__main"><strong><span class="contact-num">(03)</span> Rodrigo Díaz</strong></div>
+            <div class="actions">
+              <button type="button" class="btn btn--small btn--pesos" data-ver-pesos><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v18M5 7h14M5 7l-3 8a4 4 0 0 0 6 0L5 7zm14 0l-3 8a4 4 0 0 0 6 0l-3-8z"/></svg>VER PESOS</button>
+            </div>
+          </div>
+          <div class="list__row contact-row">
+            <div class="list__main"><strong><span class="contact-num">(04)</span> Brenda Ruiz</strong></div>
+            <div class="actions">
+              <button type="button" class="btn btn--small btn--pesos" data-ver-pesos><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v18M5 7h14M5 7l-3 8a4 4 0 0 0 6 0L5 7zm14 0l-3 8a4 4 0 0 0 6 0l-3-8z"/></svg>VER PESOS</button>
+            </div>
+          </div>
+          <div class="list__row contact-row">
+            <div class="list__main"><strong><span class="contact-num">(05)</span> Micaela Sosa</strong></div>
+            <div class="actions">
+              <button type="button" class="btn btn--small btn--pesos" data-ver-pesos><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v18M5 7h14M5 7l-3 8a4 4 0 0 0 6 0L5 7zm14 0l-3 8a4 4 0 0 0 6 0l-3-8z"/></svg>VER PESOS</button>
+            </div>
+          </div>
+          <div class="list__row contact-row">
+            <div class="list__main"><strong><span class="contact-num">(06)</span> Leandro Benítez</strong></div>
+            <div class="actions">
+              <button type="button" class="btn btn--small btn--pesos" data-ver-pesos><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v18M5 7h14M5 7l-3 8a4 4 0 0 0 6 0L5 7zm14 0l-3 8a4 4 0 0 0 6 0l-3-8z"/></svg>VER PESOS</button>
+            </div>
+          </div>
+          <div class="list__row contact-row">
+            <div class="list__main"><strong><span class="contact-num">(07)</span> Santiago Díaz</strong></div>
+            <div class="actions">
+              <button type="button" class="btn btn--small btn--pesos" data-ver-pesos><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v18M5 7h14M5 7l-3 8a4 4 0 0 0 6 0L5 7zm14 0l-3 8a4 4 0 0 0 6 0l-3-8z"/></svg>VER PESOS</button>
+            </div>
+          </div>
+          <div class="list__row contact-row">
+            <div class="list__main"><strong><span class="contact-num">(08)</span> Gastón Vargas</strong></div>
+            <div class="actions">
+              <button type="button" class="btn btn--small btn--pesos" data-ver-pesos><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v18M5 7h14M5 7l-3 8a4 4 0 0 0 6 0L5 7zm14 0l-3 8a4 4 0 0 0 6 0l-3-8z"/></svg>VER PESOS</button>
+            </div>
+          </div>
+          <div class="list__row contact-row">
+            <div class="list__main"><strong><span class="contact-num">(09)</span> Victoria Herrera</strong></div>
+            <div class="actions">
+              <button type="button" class="btn btn--small btn--pesos" data-ver-pesos><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v18M5 7h14M5 7l-3 8a4 4 0 0 0 6 0L5 7zm14 0l-3 8a4 4 0 0 0 6 0l-3-8z"/></svg>VER PESOS</button>
+            </div>
+          </div>
+          <div class="list__row contact-row">
+            <div class="list__main"><strong><span class="contact-num">(10)</span> Walter Correa</strong></div>
+            <div class="actions">
+              <button type="button" class="btn btn--small btn--pesos" data-ver-pesos><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v18M5 7h14M5 7l-3 8a4 4 0 0 0 6 0L5 7zm14 0l-3 8a4 4 0 0 0 6 0l-3-8z"/></svg>VER PESOS</button>
+            </div>
+          </div>
+          </div>
+          <div class="files__status ccol__empty hidden">Sin resultados</div>
+        </section>
+        <section class="ccol" data-tipo="cortadora">
+          <h4 class="ccol__title">CORTADORAS <span class="ccol__count" data-count></span></h4>
+          <div class="list">
+          <div class="list__row contact-row">
+            <div class="list__main"><strong><span class="contact-num">(01)</span> Ezequiel Suárez</strong></div>
+            <div class="actions">
+              <button type="button" class="btn btn--small btn--pesos" data-ver-pesos><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v18M5 7h14M5 7l-3 8a4 4 0 0 0 6 0L5 7zm14 0l-3 8a4 4 0 0 0 6 0l-3-8z"/></svg>VER PESOS</button>
+            </div>
+          </div>
+          <div class="list__row contact-row">
+            <div class="list__main"><strong><span class="contact-num">(02)</span> Cristian Peralta</strong></div>
+            <div class="actions">
+              <button type="button" class="btn btn--small btn--pesos" data-ver-pesos><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v18M5 7h14M5 7l-3 8a4 4 0 0 0 6 0L5 7zm14 0l-3 8a4 4 0 0 0 6 0l-3-8z"/></svg>VER PESOS</button>
+            </div>
+          </div>
+          <div class="list__row contact-row">
+            <div class="list__main"><strong><span class="contact-num">(03)</span> Tamara Vega</strong></div>
+            <div class="actions">
+              <button type="button" class="btn btn--small btn--pesos" data-ver-pesos><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v18M5 7h14M5 7l-3 8a4 4 0 0 0 6 0L5 7zm14 0l-3 8a4 4 0 0 0 6 0l-3-8z"/></svg>VER PESOS</button>
+            </div>
+          </div>
+          <div class="list__row contact-row">
+            <div class="list__main"><strong><span class="contact-num">(04)</span> Antonella Paz</strong></div>
+            <div class="actions">
+              <button type="button" class="btn btn--small btn--pesos" data-ver-pesos><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v18M5 7h14M5 7l-3 8a4 4 0 0 0 6 0L5 7zm14 0l-3 8a4 4 0 0 0 6 0l-3-8z"/></svg>VER PESOS</button>
+            </div>
+          </div>
+          <div class="list__row contact-row">
+            <div class="list__main"><strong><span class="contact-num">(05)</span> Marcos Peralta</strong></div>
+            <div class="actions">
+              <button type="button" class="btn btn--small btn--pesos" data-ver-pesos><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v18M5 7h14M5 7l-3 8a4 4 0 0 0 6 0L5 7zm14 0l-3 8a4 4 0 0 0 6 0l-3-8z"/></svg>VER PESOS</button>
+            </div>
+          </div>
+          <div class="list__row contact-row">
+            <div class="list__main"><strong><span class="contact-num">(06)</span> Federico Silva</strong></div>
+            <div class="actions">
+              <button type="button" class="btn btn--small btn--pesos" data-ver-pesos><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v18M5 7h14M5 7l-3 8a4 4 0 0 0 6 0L5 7zm14 0l-3 8a4 4 0 0 0 6 0l-3-8z"/></svg>VER PESOS</button>
+            </div>
+          </div>
+          <div class="list__row contact-row">
+            <div class="list__main"><strong><span class="contact-num">(07)</span> Soledad Ruiz</strong></div>
+            <div class="actions">
+              <button type="button" class="btn btn--small btn--pesos" data-ver-pesos><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v18M5 7h14M5 7l-3 8a4 4 0 0 0 6 0L5 7zm14 0l-3 8a4 4 0 0 0 6 0l-3-8z"/></svg>VER PESOS</button>
+            </div>
+          </div>
+          <div class="list__row contact-row">
+            <div class="list__main"><strong><span class="contact-num">(08)</span> Hugo Herrera</strong></div>
+            <div class="actions">
+              <button type="button" class="btn btn--small btn--pesos" data-ver-pesos><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v18M5 7h14M5 7l-3 8a4 4 0 0 0 6 0L5 7zm14 0l-3 8a4 4 0 0 0 6 0l-3-8z"/></svg>VER PESOS</button>
+            </div>
+          </div>
+          <div class="list__row contact-row">
+            <div class="list__main"><strong><span class="contact-num">(09)</span> Gonzalo Sosa</strong></div>
+            <div class="actions">
+              <button type="button" class="btn btn--small btn--pesos" data-ver-pesos><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v18M5 7h14M5 7l-3 8a4 4 0 0 0 6 0L5 7zm14 0l-3 8a4 4 0 0 0 6 0l-3-8z"/></svg>VER PESOS</button>
+            </div>
+          </div>
+          <div class="list__row contact-row">
+            <div class="list__main"><strong><span class="contact-num">(10)</span> Marina Paz</strong></div>
+            <div class="actions">
+              <button type="button" class="btn btn--small btn--pesos" data-ver-pesos><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v18M5 7h14M5 7l-3 8a4 4 0 0 0 6 0L5 7zm14 0l-3 8a4 4 0 0 0 6 0l-3-8z"/></svg>VER PESOS</button>
+            </div>
+          </div>
+          <div class="list__row contact-row">
+            <div class="list__main"><strong><span class="contact-num">(11)</span> Luciana Torres</strong></div>
+            <div class="actions">
+              <button type="button" class="btn btn--small btn--pesos" data-ver-pesos><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v18M5 7h14M5 7l-3 8a4 4 0 0 0 6 0L5 7zm14 0l-3 8a4 4 0 0 0 6 0l-3-8z"/></svg>VER PESOS</button>
+            </div>
+          </div>
+          <div class="list__row contact-row">
+            <div class="list__main"><strong><span class="contact-num">(12)</span> Noelia Paz</strong></div>
+            <div class="actions">
+              <button type="button" class="btn btn--small btn--pesos" data-ver-pesos><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v18M5 7h14M5 7l-3 8a4 4 0 0 0 6 0L5 7zm14 0l-3 8a4 4 0 0 0 6 0l-3-8z"/></svg>VER PESOS</button>
+            </div>
+          </div>
+          <div class="list__row contact-row">
+            <div class="list__main"><strong><span class="contact-num">(13)</span> Ana Morales</strong></div>
+            <div class="actions">
+              <button type="button" class="btn btn--small btn--pesos" data-ver-pesos><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v18M5 7h14M5 7l-3 8a4 4 0 0 0 6 0L5 7zm14 0l-3 8a4 4 0 0 0 6 0l-3-8z"/></svg>VER PESOS</button>
+            </div>
+          </div>
+          <div class="list__row contact-row">
+            <div class="list__main"><strong><span class="contact-num">(14)</span> Julián Vargas</strong></div>
+            <div class="actions">
+              <button type="button" class="btn btn--small btn--pesos" data-ver-pesos><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v18M5 7h14M5 7l-3 8a4 4 0 0 0 6 0L5 7zm14 0l-3 8a4 4 0 0 0 6 0l-3-8z"/></svg>VER PESOS</button>
+            </div>
+          </div>
+          <div class="list__row contact-row">
+            <div class="list__main"><strong><span class="contact-num">(15)</span> Sabrina Medina</strong></div>
+            <div class="actions">
+              <button type="button" class="btn btn--small btn--pesos" data-ver-pesos><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v18M5 7h14M5 7l-3 8a4 4 0 0 0 6 0L5 7zm14 0l-3 8a4 4 0 0 0 6 0l-3-8z"/></svg>VER PESOS</button>
+            </div>
+          </div>
+          <div class="list__row contact-row">
+            <div class="list__main"><strong><span class="contact-num">(16)</span> Leandro Vega</strong></div>
+            <div class="actions">
+              <button type="button" class="btn btn--small btn--pesos" data-ver-pesos><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v18M5 7h14M5 7l-3 8a4 4 0 0 0 6 0L5 7zm14 0l-3 8a4 4 0 0 0 6 0l-3-8z"/></svg>VER PESOS</button>
+            </div>
+          </div>
+          <div class="list__row contact-row">
+            <div class="list__main"><strong><span class="contact-num">(17)</span> Karina Díaz</strong></div>
+            <div class="actions">
+              <button type="button" class="btn btn--small btn--pesos" data-ver-pesos><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v18M5 7h14M5 7l-3 8a4 4 0 0 0 6 0L5 7zm14 0l-3 8a4 4 0 0 0 6 0l-3-8z"/></svg>VER PESOS</button>
+            </div>
+          </div>
+          <div class="list__row contact-row">
+            <div class="list__main"><strong><span class="contact-num">(18)</span> Sofía Álvarez</strong></div>
+            <div class="actions">
+              <button type="button" class="btn btn--small btn--pesos" data-ver-pesos><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v18M5 7h14M5 7l-3 8a4 4 0 0 0 6 0L5 7zm14 0l-3 8a4 4 0 0 0 6 0l-3-8z"/></svg>VER PESOS</button>
+            </div>
+          </div>
+          <div class="list__row contact-row">
+            <div class="list__main"><strong><span class="contact-num">(19)</span> Santiago Sosa</strong></div>
+            <div class="actions">
+              <button type="button" class="btn btn--small btn--pesos" data-ver-pesos><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v18M5 7h14M5 7l-3 8a4 4 0 0 0 6 0L5 7zm14 0l-3 8a4 4 0 0 0 6 0l-3-8z"/></svg>VER PESOS</button>
+            </div>
+          </div>
+          <div class="list__row contact-row">
+            <div class="list__main"><strong><span class="contact-num">(20)</span> Elena Cabrera</strong></div>
+            <div class="actions">
+              <button type="button" class="btn btn--small btn--pesos" data-ver-pesos><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v18M5 7h14M5 7l-3 8a4 4 0 0 0 6 0L5 7zm14 0l-3 8a4 4 0 0 0 6 0l-3-8z"/></svg>VER PESOS</button>
+            </div>
+          </div>
+          </div>
+          <div class="files__status ccol__empty hidden">Sin resultados</div>
+        </section>
         </div>
       </div>
     </div>
@@ -784,6 +1509,26 @@
     </div>
   </div>
 
+  <!-- MODAL: GRUPOS -->
+  <div class="modal" id="modal-grupo" role="dialog" aria-modal="true" aria-labelledby="grupoTitle">
+    <div class="modal__box">
+      <div class="modal__head">
+        <h3 class="modal__title" id="grupoTitle">FILETERAS</h3>
+        <button class="modal__close" data-close aria-label="Cerrar">✕</button>
+      </div>
+      <div class="modal__body">
+        <img class="modal-img" id="grupoImg" alt="Grupo" />
+
+        <p>Directorio de personas del grupo.</p>
+
+        <div class="field" style="margin:0"><input type="search" id="grupoBuscar" placeholder="Buscar del 1 al 70" aria-label="Buscar del 1 al 70" autocomplete="off" /></div>
+        <div class="files__status" id="grupoStatus" role="status" aria-live="polite"></div>
+        <div class="list" id="grupoLista"><div class="files__status">Cargando…</div></div>
+        <input type="file" id="grupoFile" class="hidden" accept="image/png" />
+      </div>
+    </div>
+  </div>
+
   <!-- MODAL: VISTA PREVIA DE ARCHIVOS -->
   <div class="modal" id="modal-preview" role="dialog" aria-modal="true" aria-labelledby="previewTitle">
     <div class="modal__box" style="max-width: 900px;">
@@ -796,65 +1541,8 @@
   </div>
 
   <script>
-    /* CÓDIGOS DE PERSONAS: si "image" está vacío se genera una tarjeta automática */
-    const PERSONAS = [
-      { code: "KK-001", name: "Ana Torres",     image: "" },
-      { code: "KK-002", name: "Martín Ruiz",    image: "" },
-      { code: "KK-003", name: "Lucía Gómez",    image: "" },
-      { code: "KK-004", name: "Diego Fernández", image: "" },
-      { code: "KK-005", name: "Sofía Morales",  image: "" },
-      { code: "KK-006", name: "Tomás Herrera",  image: "" },
-    ];
-
     const $ = (sel, ctx = document) => ctx.querySelector(sel);
     const $$ = (sel, ctx = document) => [...ctx.querySelectorAll(sel)];
-
-    function generarTarjeta(persona) {
-      const w = 1200, h = 800;
-      const c = document.createElement("canvas");
-      c.width = w; c.height = h;
-      const ctx = c.getContext("2d");
-
-      const g = ctx.createLinearGradient(0, 0, w, h);
-      g.addColorStop(0, "#111114");
-      g.addColorStop(1, "#050505");
-      ctx.fillStyle = g;
-      ctx.fillRect(0, 0, w, h);
-
-      ctx.strokeStyle = "rgba(255,255,255,0.05)";
-      ctx.lineWidth = 1;
-      for (let x = 0; x < w; x += 50) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, h); ctx.stroke(); }
-      for (let y = 0; y < h; y += 50) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(w, y); ctx.stroke(); }
-
-      ctx.strokeStyle = "rgba(255,255,255,0.25)";
-      ctx.lineWidth = 2;
-      ctx.strokeRect(40, 40, w - 80, h - 80);
-
-      const iniciales = persona.name.split(" ").map(p => p[0]).slice(0, 2).join("").toUpperCase();
-      ctx.beginPath();
-      ctx.arc(w / 2, 300, 120, 0, Math.PI * 2);
-      ctx.strokeStyle = "#ffffff";
-      ctx.lineWidth = 3;
-      ctx.stroke();
-      ctx.fillStyle = "#ffffff";
-      ctx.textAlign = "center";
-      ctx.textBaseline = "middle";
-      ctx.font = "500 96px 'Space Grotesk', sans-serif";
-      ctx.fillText(iniciales, w / 2, 304);
-
-      ctx.font = "500 56px 'Space Grotesk', sans-serif";
-      ctx.fillText(persona.name, w / 2, 520);
-      ctx.fillStyle = "rgba(255,255,255,0.55)";
-      ctx.font = "500 36px 'JetBrains Mono', monospace";
-      ctx.fillText(persona.code, w / 2, 590);
-
-      ctx.font = "700 24px 'Space Grotesk', sans-serif";
-      ctx.fillStyle = "rgba(255,255,255,0.4)";
-      ctx.textAlign = "left";
-      ctx.fillText("K I N G K A S S", 80, 90);
-
-      return c.toDataURL("image/png");
-    }
 
     /* ACCESO CON CONTRASEÑA */
     const loginEl = $("#login");
@@ -959,6 +1647,89 @@
       }
     });
 
+    /* CONTACTOS -> VER PESOS */
+    $$("[data-ver-pesos]").forEach(btn =>
+      btn.addEventListener("click", () => {
+        cerrarTodosLosModales();
+        document.querySelector('.menu__item[data-modal="modal-pesos"]').click();
+      })
+    );
+
+    /* CANDADO KILAGES: usuario y contraseña para acceder */
+    const KILAJES_USER = "mercedes2026", KILAJES_PASS = "mercedes2026";
+    let kilajesAbierto = false;
+    const lockUser = $("#lockUser"), lockPass = $("#lockPass"), lockError = $("#lockError");
+
+    function intentarKilajes() {
+      if (lockUser.value.trim() === KILAJES_USER && lockPass.value === KILAJES_PASS) {
+        kilajesAbierto = true;
+        $("#kilajesLock").classList.add("is-open");
+        $("#kilajesLock").innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 7.5-2"/></svg>';
+        cerrarModal($("#modal-candado"));
+        document.querySelector('.menu__item[data-modal="modal-pesos"]').click();
+      } else {
+        lockError.textContent = "Usuario o contraseña incorrectos";
+        lockPass.value = "";
+        lockPass.focus();
+      }
+    }
+
+    /* intercepta cualquier apertura de KILAGES (incluido VER PESOS) hasta ingresar */
+    document.addEventListener("click", (e) => {
+      if (kilajesAbierto) return;
+      const item = e.target.closest && e.target.closest('.menu__item[data-modal="modal-pesos"]');
+      if (!item) return;
+      e.stopPropagation();
+      e.preventDefault();
+      abrirModal("modal-candado");
+      lockUser.focus();
+    }, true);
+
+    $("#lockBtn").addEventListener("click", intentarKilajes);
+    [lockUser, lockPass].forEach(i => i.addEventListener("keydown", (e) => { if (e.key === "Enter") intentarKilajes(); }));
+    window.addEventListener("kk:modal-cerrado", (e) => {
+      if (e.detail === "modal-candado") { lockUser.value = ""; lockPass.value = ""; lockError.textContent = ""; }
+    });
+
+    /* CONTACTOS: 3 columnas (Fileteras 01-70 · Plegadoras 01-10 · Cortadoras 01-20), buscador y filtros */
+    const cFilas = $$("#contactosCols .contact-row");
+    const cCols = $$("#contactosCols .ccol");
+    const cBuscar = $("#contactoBuscar"), cStatus = $("#contactoStatus");
+    const cChips = $$(".cfilter .chip");
+    const quitarAcentos = (t) => t.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+
+    cFilas.forEach((fila) => {
+      fila.dataset.num = parseInt(fila.querySelector(".contact-num").textContent.replace(/\D/g, ""), 10);
+      fila.dataset.nombre = quitarAcentos(fila.querySelector("strong").textContent.replace(/\(\d+\)/, "").trim());
+    });
+
+    function filtrarContactos() {
+      const q = quitarAcentos(cBuscar.value.trim().replace(/[()]/g, ""));
+      const esNumero = /^\d+$/.test(q);
+      const activos = cChips.filter((c) => c.getAttribute("aria-pressed") === "true").map((c) => c.dataset.tipo);
+      let total = 0;
+      cCols.forEach((colu) => {
+        const colActiva = !activos.length || activos.includes(colu.dataset.tipo);
+        colu.classList.toggle("hidden", !colActiva);
+        let vis = 0;
+        $$(".contact-row", colu).forEach((fila) => {
+          const ok = !q || (esNumero ? parseInt(q, 10) === +fila.dataset.num : fila.dataset.nombre.includes(q));
+          fila.classList.toggle("hidden", !ok);
+          if (ok) vis++;
+        });
+        $(".ccol__count", colu).textContent = `${vis}/${$$(".contact-row", colu).length}`;
+        $(".ccol__empty", colu).classList.toggle("hidden", vis > 0);
+        if (colActiva) total += vis;
+      });
+      cStatus.textContent = total ? `Mostrando ${total} resultado${total === 1 ? "" : "s"}` : "Sin resultados";
+    }
+    cBuscar.addEventListener("input", filtrarContactos);
+    cChips.forEach((chip) => chip.addEventListener("click", () => {
+      chip.setAttribute("aria-pressed", chip.getAttribute("aria-pressed") === "true" ? "false" : "true");
+      filtrarContactos();
+    }));
+    filtrarContactos();
+
     /* BRILLO QUE SIGUE AL MOUSE */
     $$(".menu__item").forEach(item => {
       item.addEventListener("mousemove", (e) => {
@@ -968,46 +1739,8 @@
       });
     });
 
-    /* CÓDIGOS DE PERSONAS */
-    const codesList = $("#codesList");
-    const codesFrame = $("#codesFrame");
-    const codesSelected = $("#codesSelected");
-    const codesName = $("#codesName");
-    const downloadBtn = $("#downloadBtn");
-
-    $("#codesCount").textContent = `${PERSONAS.length} registros`;
-
-    PERSONAS.forEach(persona => {
-      const chip = document.createElement("button");
-      chip.className = "code-chip";
-      chip.textContent = persona.code;
-      chip.addEventListener("click", () => seleccionarCodigo(persona, chip));
-      codesList.appendChild(chip);
-    });
-
-    function seleccionarCodigo(persona, chip) {
-      $$(".code-chip").forEach(c => c.classList.remove("is-active"));
-      chip.classList.add("is-active");
-
-      const src = persona.image || generarTarjeta(persona);
-      const ext = persona.image ? (persona.image.split(".").pop().split("?")[0] || "jpg") : "png";
-
-      codesFrame.innerHTML = "";
-      const img = new Image();
-      img.src = src;
-      img.alt = `Imagen de ${persona.name}`;
-      codesFrame.appendChild(img);
-
-      codesSelected.textContent = persona.code;
-      codesName.textContent = persona.name;
-
-      downloadBtn.href = src;
-      downloadBtn.download = `${persona.code}.${ext}`;
-      downloadBtn.classList.remove("hidden");
-    }
-
-    /* IMAGEN DE EJEMPLO EN CONTACTOS (cámbiala por: $("#contactosImg").src = "img/tu-imagen.jpg"; ) */
-    $("#contactosImg").src = (() => {
+    /* BANNER CON TÍTULO (mismo diseño para CONTACTOS y los grupos) */
+    function bannerImg(texto) {
       const c = document.createElement("canvas");
       c.width = 1400; c.height = 612;
       const ctx = c.getContext("2d");
@@ -1023,9 +1756,16 @@
       ctx.fillStyle = "#fff";
       ctx.font = "500 64px 'Space Grotesk', sans-serif";
       ctx.textAlign = "center"; ctx.textBaseline = "middle";
-      ctx.fillText("CONTACTOS", 700, 306);
+      ctx.fillText(texto, 700, 306);
       return c.toDataURL("image/png");
-    })();
+    }
+    $("#contactosImg").src = bannerImg("CONTACTOS");
+    $("#grupoImg").src = bannerImg("FILETERAS");
+    const redibujarBanners = () => {
+      $("#contactosImg").src = bannerImg("CONTACTOS");
+      $("#grupoImg").src = bannerImg($("#grupoTitle").textContent.trim());
+    };
+    document.fonts?.load("500 64px 'Space Grotesk'").then(redibujarBanners).catch(() => {});
 
     /* INICIO: el módulo de Supabase decide si hay sesión válida */
   </script>
@@ -1085,6 +1825,9 @@
       adminPanel.classList.toggle("hidden", !esAdmin || vistaEspectador);
       $("#adminPreviewBar").classList.toggle("hidden", !(esAdmin && vistaEspectador));
       $("#modoTag").textContent = !esAdmin || vistaEspectador ? "Modo espectador" : "Modo administrador";
+      if (sesion && !ctCargado) { ctCargado = true; cargarContactos(); }
+      if (!sesion) ctCargado = false;
+      renderContactosAdmin();
       if (esAdmin) $("#adminWho").textContent = `Administrador · ${sesion.user.email.replace("@kingkass.app", "")}`;
     }
 
@@ -1351,6 +2094,304 @@
       cargarArchivos();
     });
 
+    /* GRUPOS: FILETERAS / PLEGADORAS / CORTADORAS · 70 espacios, un PNG por persona */
+    const GRUPOS = { fileteras: "FILETERAS", plegadoras: "PLEGADORAS", cortadoras: "CORTADORAS" };
+    const NOMBRES_GRUPO = {"fileteras": ["Matías Vargas", "Joaquín Paz", "Noelia Ramos", "Valentina Domínguez", "Santiago Rojas", "Karina Morales", "Paula Díaz", "Milagros Suárez", "Mateo Benítez", "Marina Sosa", "Federico Ramos", "Lucía Romero", "Tomás Paz", "Iván Benítez", "Natalia Gómez", "Sofía Morales", "Bruno Vega", "Marcos Ramos", "Franco Cabrera", "Soledad Paz", "Diego Giménez", "Abril Morales", "Antonella Herrera", "Hugo Silva", "Florencia Luna", "Rocío Morales", "Celeste Fernández", "Leandro Ortiz", "Cristian Domínguez", "Esteban Rojas", "Sabrina Peralta", "Maximiliano Cabrera", "Pablo Ruiz", "Ramiro Giménez", "Elena Cabrera", "Damián Sosa", "Camila Díaz", "Carolina Paz", "Walter Fernández", "Julián Ríos", "Nahuel Rojas", "Tamara Pérez", "Nicolás Acosta", "Óscar Aguirre", "Candela Aguirre", "Sebastián Paz", "Mariana Herrera", "Verónica Sosa", "Rodrigo Domínguez", "Luciana Aguirre", "Facundo Silva", "Romina Pérez", "Ignacio Correa", "Gabriela Silva", "Martín Benítez", "Victoria Cabrera", "Gastón Peralta", "Lucas Medina", "Julieta Romero", "Emiliano Herrera", "Brenda Álvarez", "Andrés Romero", "Lorena Medina", "Yamila Medina", "Daniela Torres", "Ezequiel Paz", "Agustina Álvarez", "Ana Molina", "Gonzalo Rojas", "Hernán Torres"], "plegadoras": ["Lucas Silva", "Axel Silva", "Rodrigo Díaz", "Brenda Ruiz", "Micaela Sosa", "Leandro Benítez", "Santiago Díaz", "Gastón Vargas", "Victoria Herrera", "Walter Correa", "Noelia Luna", "Maximiliano Sosa", "Ramiro Ibarra", "Yamila Peralta", "Mateo Giménez", "Agustina Ortiz", "Florencia Paz", "Damián Giménez", "Mariana Correa", "Romina Benítez", "Esteban López", "Soledad Molina", "Gonzalo Luna", "Rocío Aguirre", "Iván Acosta", "Emiliano Domínguez", "Tamara Paz", "Julieta Morales", "Franco Romero", "Belén Paz", "Candela Silva", "Facundo Domínguez", "Milagros Ruiz", "Ana Aguirre", "Sofía Correa", "Marina Ruiz", "Ezequiel Cabrera", "Martín Navarro", "Tomás Luna", "Hernán Molina", "Óscar Cabrera", "Daniela Ortiz", "Elena Vargas", "Carolina Castro", "Sebastián Gómez", "Sabrina Luna", "Joaquín Molina", "Diego López", "Lorena Peralta", "Karina López", "Natalia Gómez", "Luciana Castro", "Pilar Ortiz", "Nahuel Ruiz", "Nicolás Torres", "Pablo Suárez", "Cristian Rojas", "Bruno Vargas", "Valentina Cabrera", "Ignacio Molina", "Hugo Díaz", "Andrés Gómez", "Verónica Romero", "Celeste Castro", "Gabriela Torres", "Camila Medina", "Paula Molina", "Marcos Suárez", "Abril Molina", "Julián Álvarez"], "cortadoras": ["Ezequiel Suárez", "Cristian Peralta", "Tamara Vega", "Antonella Paz", "Marcos Peralta", "Federico Silva", "Soledad Ruiz", "Hugo Herrera", "Gonzalo Sosa", "Marina Paz", "Luciana Torres", "Noelia Paz", "Ana Morales", "Julián Vargas", "Sabrina Medina", "Leandro Vega", "Karina Díaz", "Sofía Álvarez", "Santiago Sosa", "Elena Cabrera", "Celeste Ramos", "Florencia Cabrera", "Abril Ortiz", "Candela Acosta", "Lucía López", "Gastón Sosa", "Andrés Morales", "Natalia Álvarez", "Ignacio Correa", "Gabriela Navarro", "Ramiro Sosa", "Óscar Gómez", "Brenda Vargas", "Rodrigo Acosta", "Mateo Benítez", "Walter Sosa", "Martín Torres", "Damián Cabrera", "Tomás Paz", "Pablo Suárez", "Yamila Peralta", "Sebastián Acosta", "Julieta Acosta", "Facundo Sosa", "Victoria Morales", "Rocío Domínguez", "Paula Benítez", "Bruno Luna", "Lorena Fernández", "Franco Rojas", "Belén Fernández", "Emiliano Molina", "Milagros Rojas", "Matías Gómez", "Hernán Benítez", "Valentina Acosta", "Carolina Sosa", "Joaquín Aguirre", "Diego Morales", "Camila Ramos", "Mariana Romero", "Esteban Romero", "Iván Luna", "Micaela Fernández", "Daniela Molina", "Agustina Pérez", "Nicolás Vargas", "Nahuel Luna", "Lucas Ruiz", "Pilar Ríos"]};
+    const gBuscar = $("#grupoBuscar"), gLista = $("#grupoLista"), gFile = $("#grupoFile"), gStatus = $("#grupoStatus");
+    let grupo = "fileteras", gImgs = {}, gSubirN = 0;
+    const pad = (n) => String(n).padStart(2, "0");
+    const puedeEditar = () => esAdmin && !vistaEspectador;
+
+    async function cargarGrupo() {
+      const g = grupo;
+      gImgs = {};
+      pintarGrupo(); // muestra los 70 nombres de inmediato
+      let data = [], error = null;
+      try { ({ data, error } = await bucket().list(g, { limit: 200 })); } catch (e) { error = e; }
+      if (g !== grupo) return;
+      if (error) estado(gStatus, "No se pudieron cargar las imágenes.", true);
+      const keys = (data || []).filter((o) => o.id && /^\d+\.png$/i.test(o.name)).map((o) => `${g}/${o.name}`);
+      if (keys.length) {
+        try {
+          const { data: f } = await bucket().createSignedUrls(keys, 3600);
+          keys.forEach((k, i) => { gImgs[parseInt(k.split("/")[1], 10)] = f?.[i]?.signedUrl || ""; });
+        } catch (e) { estado(gStatus, "No se pudieron cargar las imágenes.", true); }
+      }
+      if (g !== grupo) return;
+      pintarGrupo();
+    }
+
+    function pintarGrupo() {
+      const q = gBuscar.value.trim().toLowerCase();
+      gLista.innerHTML = "";
+      let n = 0;
+      NOMBRES_GRUPO[grupo].forEach((nombre, i) => {
+        const num = i + 1;
+        if (q && !(/^\d+$/.test(q) ? num === +q : nombre.toLowerCase().includes(q))) return;
+        n++;
+        gLista.appendChild(filaGrupo(num, nombre));
+      });
+      if (!n) gLista.innerHTML = '<div class="files__status">Sin resultados. Busca un número del 1 al 70.</div>';
+    }
+
+    function filaGrupo(num, nombre) {
+      const url = gImgs[num];
+      const row = document.createElement("div");
+      row.className = "list__row";
+      const main = document.createElement("div");
+      main.className = "list__main";
+      const strong = document.createElement("strong");
+      strong.textContent = nombre;
+      const span = document.createElement("span");
+      span.textContent = `N° ${pad(num)} · ${url ? "PNG cargado" : "Sin imagen"}`;
+      main.append(strong, span);
+      row.appendChild(main);
+
+      const acc = document.createElement("div");
+      acc.className = "actions";
+      const btn = (txt, cls, fn) => {
+        const b = document.createElement("button");
+        b.type = "button"; b.className = `btn btn--small ${cls}`; b.textContent = txt;
+        b.addEventListener("click", fn);
+        acc.appendChild(b);
+      };
+      if (url) btn("Vista previa", "", () => vistaPrevia({ name: `${nombre}.png` }, url));
+      if (puedeEditar()) {
+        btn(url ? "Reemplazar" : "Subir PNG", "btn--solid", () => { gSubirN = num; gFile.click(); });
+        if (url) btn("Eliminar", "btn--danger", async () => {
+          if (!confirm(`¿Eliminar la imagen de “${nombre}”?`)) return;
+          const { error } = await bucket().remove([`${grupo}/${pad(num)}.png`]);
+          if (error) { estado(gStatus, "No se pudo eliminar la imagen.", true); return; }
+          cargarGrupo();
+        });
+      }
+      if (acc.children.length) row.appendChild(acc);
+      return row;
+    }
+
+    gFile.addEventListener("change", async () => {
+      const file = gFile.files[0], n = gSubirN, g = grupo;
+      gFile.value = "";
+      if (!file) return;
+      if (file.type !== "image/png" && extDe(file.name) !== "png") return estado(gStatus, "Solo se permiten archivos PNG.", true);
+      if (file.size > MAX_BYTES) return estado(gStatus, "El archivo supera 5 MB.", true);
+      estado(gStatus, `Subiendo ${pad(n)}…`);
+      const path = `${g}/${pad(n)}.png`;
+      await bucket().remove([path]);
+      const { error } = await bucket().upload(path, file, { contentType: "image/png", upsert: false });
+      if (error) return estado(gStatus, error.message, true);
+      estado(gStatus, `Imagen ${pad(n)} subida.`);
+      if (g === grupo) cargarGrupo();
+    });
+
+    gBuscar.addEventListener("input", pintarGrupo);
+    document.querySelectorAll("[data-grupo]").forEach((b) => b.addEventListener("click", () => {
+      grupo = b.dataset.grupo;
+      $("#grupoTitle").textContent = GRUPOS[grupo];
+      $("#grupoImg").src = bannerImg(GRUPOS[grupo]);
+      gBuscar.value = "";
+      estado(gStatus, puedeEditar() ? "Sube un PNG por persona · máx. 5 MB" : "");
+      cargarGrupo();
+    }));
+
+    /* CONTACTOS EDITABLES (plegadoras y cortadoras): nombre + número de WhatsApp.
+       Se guardan en Supabase Storage (archivos/contactos/datos.json). Solo el admin edita;
+       si una persona no tiene número, el botón WhatsApp no aparece. */
+    const CT_PATH = "contactos/datos.json";
+    const CT_GRUPO = { plegadora: "plegadoras", cortadora: "cortadoras" };
+    const NOMBRES_ORIG = JSON.parse(JSON.stringify(NOMBRES_GRUPO));
+    let ctData = { filetera: {}, plegadora: {}, cortadora: {} };
+    let ctCargado = false;
+    const ctFilas = [...document.querySelectorAll('#contactosCols .contact-row')];
+    const ctSinAcentos = (t) => t.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+    const ctDigitos = (t) => (t || "").replace(/\D/g, "");
+    const ctPuedeEditar = () => esAdmin && !vistaEspectador;
+
+    ctFilas.forEach((fila) => {
+      fila.dataset.tipo = fila.closest(".ccol").dataset.tipo;
+      fila.dataset.numero = parseInt(fila.querySelector(".contact-num").textContent.replace(/\D/g, ""), 10);
+      fila.dataset.nombreOrig = fila.querySelector("strong").textContent.replace(/\(\d+\)/, "").trim();
+      /* número original fijo en el HTML (fileteras): se toma como valor por defecto y se redibuja desde JS */
+      const spOrig = fila.querySelector(".list__main > span");
+      fila.dataset.telOrig = spOrig ? spOrig.textContent.trim() : "";
+      spOrig?.remove();
+      fila.querySelector(".actions a")?.remove();
+    });
+
+    const ICONO_LAPIZ = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></svg>';
+    function btnLapiz(etiqueta, fn) {
+      const b = document.createElement("button");
+      b.type = "button"; b.className = "pen"; b.dataset.pen = "";
+      b.setAttribute("aria-label", etiqueta); b.title = etiqueta;
+      b.innerHTML = ICONO_LAPIZ;
+      b.addEventListener("click", fn);
+      return b;
+    }
+
+    function pintarFilaContacto(fila) {
+      const d = ctData[fila.dataset.tipo][pad(+fila.dataset.numero)] || {};
+      const nombre = d.nombre || fila.dataset.nombreOrig;
+      const tel = d.tel !== undefined ? d.tel : fila.dataset.telOrig;
+      const puede = ctPuedeEditar();
+
+      /* nombre (+ lápiz) */
+      const strong = fila.querySelector("strong");
+      const nodoTxt = [...strong.childNodes].find((n) => n.nodeType === 3);
+      nodoTxt.textContent = ` ${nombre}`;
+      fila.dataset.nombre = ctSinAcentos(nombre);
+      let lapizN = strong.querySelector("[data-pen]");
+      if (puede && !lapizN) strong.appendChild(btnLapiz("Editar nombre", () => editarCampo(fila, "nombre")));
+      else if (!puede && lapizN) lapizN.remove();
+
+      /* número debajo del nombre (+ lápiz); el admin siempre ve el espacio */
+      const main = fila.querySelector(".list__main");
+      let span = main.querySelector(":scope > span[data-tel]");
+      if (tel || puede) {
+        if (!span) {
+          span = document.createElement("span");
+          span.dataset.tel = "";
+          span.append(document.createElement("span"));
+          main.appendChild(span);
+        }
+        const txt = span.firstChild;
+        txt.textContent = tel || "Agregar número de WhatsApp";
+        span.classList.toggle("is-empty", !tel);
+        let lapizT = span.querySelector("[data-pen]");
+        if (puede && !lapizT) span.appendChild(btnLapiz(tel ? "Editar número" : "Agregar número", () => editarCampo(fila, "tel")));
+        else if (!puede && lapizT) lapizT.remove();
+        else if (lapizT) { const t = tel ? "Editar número" : "Agregar número"; lapizT.title = t; lapizT.setAttribute("aria-label", t); }
+      } else if (span) span.remove();
+
+      /* botón WhatsApp: solo si hay número */
+      const acc = fila.querySelector(".actions");
+      let wa = acc.querySelector("a[data-wa]");
+      const dig = ctDigitos(tel);
+      if (dig) {
+        if (!wa) {
+          wa = document.createElement("a");
+          wa.className = "btn btn--small";
+          wa.dataset.wa = "";
+          wa.target = "_blank";
+          wa.rel = "noopener";
+          wa.textContent = "WhatsApp";
+          acc.querySelector("[data-ver-pesos]").after(wa);
+        }
+        wa.href = `https://wa.me/${dig}`;
+      } else if (wa) wa.remove();
+    }
+
+    function aplicarContactos() {
+      for (const [tipo, g] of Object.entries(CT_GRUPO)) {
+        NOMBRES_GRUPO[g] = NOMBRES_ORIG[g].slice();
+        for (const [k, d] of Object.entries(ctData[tipo])) {
+          if (d.nombre && NOMBRES_GRUPO[g][+k - 1] !== undefined) NOMBRES_GRUPO[g][+k - 1] = d.nombre;
+        }
+      }
+      ctFilas.forEach(pintarFilaContacto);
+      pintarGrupo();
+    }
+
+    function renderContactosAdmin() {
+      if (!ctPuedeEditar()) {
+        ctFilas.forEach((fila) => { delete fila.dataset.editando; fila.querySelector(".iedit")?.remove(); });
+      }
+      ctFilas.forEach(pintarFilaContacto);
+    }
+
+    async function cargarContactos() {
+      try {
+        const { data: f } = await bucket().createSignedUrl(CT_PATH, 60);
+        if (f?.signedUrl) {
+          const r = await fetch(f.signedUrl, { cache: "no-store" });
+          if (r.ok) {
+            const j = await r.json();
+            ctData = { filetera: j.filetera || {}, plegadora: j.plegadora || {}, cortadora: j.cortadora || {} };
+          }
+        }
+      } catch (e) { /* sin datos guardados todavía */ }
+      aplicarContactos();
+    }
+
+    async function guardarContactos() {
+      const blob = new Blob([JSON.stringify(ctData)], { type: "application/json" });
+      let { error } = await bucket().upload(CT_PATH, blob, { contentType: "application/json", upsert: true });
+      if (error) {
+        await bucket().remove([CT_PATH]);
+        ({ error } = await bucket().upload(CT_PATH, blob, { contentType: "application/json", upsert: false }));
+      }
+      if (error) console.error(error);
+      return !error;
+    }
+
+    function editarCampo(fila, campo) {
+      if (!ctPuedeEditar() || fila.dataset.editando) return;
+      const tipo = fila.dataset.tipo, key = pad(+fila.dataset.numero);
+      const d = ctData[tipo][key] || {};
+      const esTel = campo === "tel";
+
+      const box = document.createElement("div");
+      box.className = "iedit";
+      const fil = document.createElement("div");
+      fil.className = "iedit__row";
+      const input = document.createElement("input");
+      input.type = esTel ? "tel" : "text";
+      input.placeholder = esTel ? "+54 11 5555-0101" : "Nombre";
+      input.value = esTel ? (d.tel !== undefined ? d.tel : fila.dataset.telOrig) : (d.nombre || fila.dataset.nombreOrig);
+      input.autocomplete = "off";
+      input.setAttribute("aria-label", esTel ? "Número de WhatsApp" : "Nombre");
+      const mk = (txt, et) => {
+        const b = document.createElement("button");
+        b.type = "button"; b.className = "ibtn"; b.textContent = txt; b.title = et; b.setAttribute("aria-label", et);
+        return b;
+      };
+      const bOk = mk("✓", "Guardar"), bNo = mk("✕", "Cancelar");
+      fil.append(input, bOk, bNo);
+      const msg = document.createElement("div");
+      msg.className = "iedit__msg";
+      msg.textContent = esTel ? "Con código de país. Vacío = sin botón WhatsApp." : "";
+      box.append(fil, msg);
+
+      const cerrar = () => { box.remove(); delete fila.dataset.editando; };
+      const error = (t) => { msg.textContent = t; msg.classList.add("is-error"); };
+      bNo.addEventListener("click", cerrar);
+
+      const guardar = async () => {
+        const val = input.value.trim().replace(/\s+/g, " ");
+        const nuevo = { ...(ctData[tipo][key] || {}) };
+        if (esTel) {
+          const dig = ctDigitos(val);
+          if (val && (dig.length < 8 || dig.length > 15)) return error("Número no válido. Incluye el código de país, ej. +54 11 5555-0101.");
+          if (val !== fila.dataset.telOrig) nuevo.tel = val; else delete nuevo.tel;
+        } else {
+          if (!val) return error("Escribe un nombre.");
+          if (val !== fila.dataset.nombreOrig) nuevo.nombre = val; else delete nuevo.nombre;
+        }
+        bOk.disabled = true;
+        msg.classList.remove("is-error");
+        msg.textContent = "Guardando…";
+        const previo = ctData[tipo][key];
+        if (Object.keys(nuevo).length) ctData[tipo][key] = nuevo; else delete ctData[tipo][key];
+        if (!(await guardarContactos())) {
+          if (previo) ctData[tipo][key] = previo; else delete ctData[tipo][key];
+          bOk.disabled = false;
+          return error("No se pudo guardar. Revisa tu conexión o los permisos del almacenamiento.");
+        }
+        cerrar();
+        aplicarContactos();
+      };
+      bOk.addEventListener("click", guardar);
+      input.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") { e.preventDefault(); guardar(); }
+        else if (e.key === "Escape") { e.stopPropagation(); cerrar(); }
+      });
+
+      fila.dataset.editando = campo;
+      const main = fila.querySelector(".list__main");
+      if (esTel) main.appendChild(box); else main.prepend(box);
+      input.focus();
+      input.select();
+    }
+
     /* El usuario escrito se convierte en correo interno: admin -> admin@kingkass.app.
        Si se escribe un correo completo (con @), se usa tal cual. */
     const correoDe = (u) => {
@@ -1431,7 +2472,7 @@
       if (!cur.session) {
         const { error } = await sb.auth.signInAnonymously();
         if (error) {
-          loginError.textContent = "No se pudo ingresar. Inténtalo de nuevo.";
+          loginError.textContent = `No se pudo ingresar: ${error.message}`;
           viewerEnter.disabled = false;
           return;
         }
