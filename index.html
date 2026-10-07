@@ -1581,6 +1581,21 @@
     </div>
   </div>
 
+  <!-- MODAL: PESOS DE UNA PERSONA (desde PERSONAL > VER PESOS) -->
+  <div class="modal" id="modal-persona" role="dialog" aria-modal="true" aria-labelledby="t-persona">
+    <div class="modal__box">
+      <div class="modal__head">
+        <h3 class="modal__title" id="t-persona" style="overflow-wrap:anywhere;">PESOS</h3>
+        <button class="modal__close" data-close aria-label="Cerrar">✕</button>
+      </div>
+      <div class="modal__body">
+        <p>Archivos Excel e imágenes. Pulsa “Descargar” para guardarlos.</p>
+        <div class="list" id="perList"><div class="files__status">Cargando archivos…</div></div>
+        <div class="admin-slot" id="slotPersona"></div>
+      </div>
+    </div>
+  </div>
+
   <!-- MODAL: GRUPOS -->
   <div class="modal" id="modal-grupo" role="dialog" aria-modal="true" aria-labelledby="grupoTitle">
     <div class="modal__box">
@@ -1931,6 +1946,9 @@
     const movList = $("#movList");
     const slotPesos = $("#slotPesos");
     const slotCorte = $("#slotCorte");
+    const slotPersona = $("#slotPersona");
+    const perList = $("#perList");
+    const esPersona = (s) => String(s).startsWith("personal/");
     const adminZone = $("#adminZone");
     const ACCEPT_ORIGINAL = fileInput.accept;
     const esMov = () => seccion === "movimientos";
@@ -1967,7 +1985,7 @@
 
     async function cargarArchivos() {
       const actual = seccion;
-      const lista = actual === "movimientos" ? movList : filesList;
+      const lista = actual === "movimientos" ? movList : esPersona(actual) ? perList : filesList;
       let data, error;
       try {
         ({ data, error } = await bucket().list(actual, {
@@ -2465,28 +2483,20 @@
       ctFilas.forEach(pintarFilaContacto);
     }
 
-    /* VER PESOS (Personal): abre el PNG de esa persona (carpeta del grupo + número). No depende de KILAJES. */
-    const CT_CARPETA = { filetera: "fileteras", plegadora: "plegadoras", cortadora: "cortadoras" };
-    async function verPesoPersona(fila) {
+    /* VER PESOS (Personal): ventana de archivos de esa persona (igual que PESO TOTAL CORTE).
+       Carpeta en Supabase: personal/<tipo>-<número>/ · No depende de KILAJES. */
+    const CT_TIPO = { filetera: "FILETERA", plegadora: "PLEGADORA", cortadora: "CORTADORA" };
+    function verPesoPersona(fila) {
       const tipo = fila.dataset.tipo, num = pad(+fila.dataset.numero);
       const nombre = (ctData[tipo][num] && ctData[tipo][num].nombre) || fila.dataset.nombreOrig;
-      const body = $("#previewBody");
-      $("#previewTitle").textContent = `${nombre} · N° ${num}`;
-      body.innerHTML = '<div class="files__status">Cargando imagen…</div>';
-      window.abrirModal("modal-preview");
-      let url = "";
-      try {
-        const { data } = await bucket().createSignedUrl(`${CT_CARPETA[tipo]}/${num}.png`, 3600);
-        url = data?.signedUrl || "";
-      } catch (e) { /* sin imagen */ }
-      if (!url) { body.innerHTML = '<div class="files__status">Esta persona todavía no tiene imagen de pesos.</div>'; return; }
-      body.innerHTML = "";
-      const img = new Image();
-      img.className = "preview__img";
-      img.alt = `Pesos de ${nombre}`;
-      img.onerror = () => { body.innerHTML = '<div class="files__status">No se pudo cargar la imagen.</div>'; };
-      img.src = url;
-      body.appendChild(img);
+      seccion = `personal/${tipo}-${num}`;
+      slotPersona.appendChild(adminZone);
+      fileInput.accept = ACCEPT_ORIGINAL;
+      $("#t-persona").textContent = `PESOS · ${nombre} (${num})`;
+      perList.innerHTML = '<div class="files__status">Cargando archivos…</div>';
+      estado(uploadStatus, `${CT_TIPO[tipo]} N° ${num} · Excel, CSV o imágenes · máx. 5 MB por archivo`);
+      window.abrirModal("modal-persona");
+      cargarArchivos();
     }
     ctFilas.forEach((fila) => {
       fila.querySelector("[data-ver-pesos]")?.addEventListener("click", () => verPesoPersona(fila));
