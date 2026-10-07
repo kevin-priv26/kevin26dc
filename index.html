@@ -421,6 +421,38 @@
     .lock-form .field { margin-bottom: 0.6rem; }
     .lock-form .btn { width: 100%; margin-top: 0.4rem; }
     .lock-form .login__error { margin-top: 0.4rem; min-height: 1.2rem; }
+
+    /* Tarjeta ancha + CALCULADORA */
+    .menu__item--wide { grid-column: 1 / -1; min-height: 170px; }
+    .calc { display: grid; gap: 0.75rem; }
+    .calc__row {
+      display: grid; grid-template-columns: 110px 1fr 1fr 1fr; gap: 0.6rem; align-items: end;
+      padding: 0.9rem 1rem; background: var(--surface-2); border: 1px solid var(--line); border-radius: 12px;
+    }
+    .calc__row--corte, .calc__row--bono { grid-template-columns: 110px 1fr 1fr 1fr; }
+    .calc__modo { grid-column: 1 / -1; display: flex; gap: 0.5rem; flex-wrap: wrap; }
+    .calc__detalle { grid-column: 1 / -1; font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: 0.04em; color: var(--muted); }
+    .calc__detalle.is-warn { color: var(--danger); }
+    .calc__area { font-weight: 500; letter-spacing: 0.12em; align-self: center; }
+    .calc__f { display: grid; gap: 0.3rem; min-width: 0; }
+    .calc__f label { font-family: var(--font-mono); font-size: 0.62rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); }
+    .calc__f input {
+      width: 100%; padding: 0.7rem 0.8rem; background: var(--bg); border: 1px solid var(--line); border-radius: 10px;
+      color: var(--text); font-family: var(--font-mono); font-size: 0.9rem;
+    }
+    .calc__f input:focus { outline: none; border-color: var(--line-strong); box-shadow: 0 0 0 3px rgba(255,255,255,0.05); }
+    .calc__out { font-family: var(--font-mono); font-size: 1.05rem; padding: 0.7rem 0; }
+    .calc__total {
+      display: flex; justify-content: space-between; align-items: center; gap: 1rem; flex-wrap: wrap;
+      padding: 1rem 1.1rem; border: 1px solid var(--line-strong); border-radius: 12px;
+    }
+    .calc__total div { display: grid; gap: 0.2rem; }
+    .calc__total small { font-family: var(--font-mono); font-size: 0.62rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); }
+    .calc__total strong { font-size: 1.5rem; font-weight: 500; font-family: var(--font-mono); }
+    @media (max-width: 640px) {
+      .calc__row { grid-template-columns: 1fr 1fr; }
+      .calc__area { grid-column: 1 / -1; }
+    }
     .modal.is-open { opacity: 1; visibility: visible; }
 
     .modal__box {
@@ -733,33 +765,21 @@
           <span class="menu__cta">Abrir <span class="menu__arrow">→</span></span>
         </div>
       </button>
+
+      <button class="menu__item menu__item--wide reveal" style="--i:7" data-modal="modal-calc">
+        <div class="menu__top">
+          <span class="menu__icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2" width="16" height="20" rx="2"/><path d="M8 6h8"/><path d="M8 11h.01M12 11h.01M16 11h.01M8 15h.01M12 15h.01M16 15h.01M8 19h.01M12 19h4"/></svg>
+          </span>
+        </div>
+        <div>
+          <div class="menu__label">CALCULADORA</div>
+          <div class="menu__desc">Kilos por tarifa: cuánto corresponde pagar por corte, plegado y filete.</div>
+          <span class="menu__cta">Abrir <span class="menu__arrow">→</span></span>
+        </div>
+      </button>
     </nav>
 
-    <section class="codes reveal" style="--i:7" aria-label="Grupos">
-      <nav class="menu" aria-label="Grupos">
-        <button class="menu__item" data-grupo="fileteras" data-modal="modal-grupo">
-          <div class="menu__top"><span class="menu__icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M2 12c3-5 8-6 12-4l5-3v14l-5-3c-4 2-9 1-12-4z"/><circle cx="8" cy="11" r="0.8"/></svg></span></div>
-          <div>
-            <div class="menu__label">FILETERAS</div>
-            <span class="menu__cta">Abrir <span class="menu__arrow">→</span></span>
-          </div>
-        </button>
-        <button class="menu__item" data-grupo="plegadoras" data-modal="modal-grupo">
-          <div class="menu__top"><span class="menu__icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 2 2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg></span></div>
-          <div>
-            <div class="menu__label">PLEGADORAS</div>
-            <span class="menu__cta">Abrir <span class="menu__arrow">→</span></span>
-          </div>
-        </button>
-        <button class="menu__item" data-grupo="cortadoras" data-modal="modal-grupo">
-          <div class="menu__top"><span class="menu__icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M20 4 8.12 15.88M14.47 14.48 20 20M8.12 8.12 12 12"/></svg></span></div>
-          <div>
-            <div class="menu__label">CORTADORAS</div>
-            <span class="menu__cta">Abrir <span class="menu__arrow">→</span></span>
-          </div>
-        </button>
-      </nav>
-    </section>
 
     <footer class="footer reveal" style="--i:8">
       <span class="tag">© KINGKASS · Todos los derechos reservados</span>
@@ -780,6 +800,51 @@
           <div class="field"><input type="password" id="lockPass" placeholder="Contraseña" aria-label="Contraseña" autocomplete="off" /></div>
           <button type="button" class="btn btn--solid" id="lockBtn">Entrar</button>
           <div class="login__error" id="lockError" role="alert"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: CALCULADORA -->
+  <div class="modal" id="modal-calc" role="dialog" aria-modal="true" aria-labelledby="t-calc">
+    <div class="modal__box">
+      <div class="modal__head">
+        <h3 class="modal__title" id="t-calc">CALCULADORA</h3>
+        <button class="modal__close" data-close aria-label="Cerrar">✕</button>
+      </div>
+      <div class="modal__body">
+        <p>Escribe los kilos de cada área. Los bonos y el total se calculan solos.</p>
+        <div class="calc" id="calc">
+          <div class="calc__row calc__row--corte" id="calcCorte">
+            <div class="calc__area">CORTE</div>
+            <div class="calc__f"><label for="k-corte">Kilos</label><input id="k-corte" type="text" inputmode="decimal" placeholder="0" autocomplete="off" /></div>
+            <div class="calc__f"><label>Bonos</label><div class="calc__out" id="corteBonos">0</div></div>
+            <div class="calc__f"><label>Total</label><div class="calc__out" id="corteTotal">0.00</div></div>
+            <div class="calc__modo" role="group" aria-label="Tipo de corte">
+              <button type="button" class="chip" data-modo="2" aria-pressed="false"><span class="chip__check" aria-hidden="true">✓</span>2 cortes</button>
+              <button type="button" class="chip" data-modo="3" aria-pressed="false"><span class="chip__check" aria-hidden="true">✓</span>3 cortes</button>
+            </div>
+            <div class="calc__detalle" id="corteDetalle">Marca 2 cortes o 3 cortes.</div>
+          </div>
+          <div class="calc__row calc__row--bono" id="calc-plegado">
+            <div class="calc__area">PLEGADO</div>
+            <div class="calc__f"><label for="k-plegado">Kilos</label><input id="k-plegado" type="text" inputmode="decimal" placeholder="0" autocomplete="off" /></div>
+            <div class="calc__f"><label>Bonos</label><div class="calc__out" id="bonos-plegado">0</div></div>
+            <div class="calc__f"><label>Total</label><div class="calc__out" id="total-plegado">0.00</div></div>
+            <div class="calc__detalle" id="detalle-plegado"></div>
+          </div>
+          <div class="calc__row calc__row--bono" id="calc-filete">
+            <div class="calc__area">FILETE</div>
+            <div class="calc__f"><label for="k-filete">Kilos</label><input id="k-filete" type="text" inputmode="decimal" placeholder="0" autocomplete="off" /></div>
+            <div class="calc__f"><label>Bonos</label><div class="calc__out" id="bonos-filete">0</div></div>
+            <div class="calc__f"><label>Total</label><div class="calc__out" id="total-filete">0.00</div></div>
+            <div class="calc__detalle" id="detalle-filete"></div>
+          </div>
+          <div class="calc__total">
+            <div><small>Kilos totales</small><strong id="calcKilos">0.00</strong></div>
+            <div><small>Total a pagar</small><strong id="calcPago">0.00</strong></div>
+            <button type="button" class="btn btn--small" id="calcLimpiar">Limpiar</button>
+          </div>
         </div>
       </div>
     </div>
@@ -1654,14 +1719,6 @@
       }
     });
 
-    /* CONTACTOS -> VER PESOS */
-    $$("[data-ver-pesos]").forEach(btn =>
-      btn.addEventListener("click", () => {
-        cerrarTodosLosModales();
-        document.querySelector('.menu__item[data-modal="modal-pesos"]').click();
-      })
-    );
-
     /* CANDADO KILAGES: usuario y contraseña para acceder */
     const KILAJES_USER = "mercedes2026", KILAJES_PASS = "mercedes2026";
     let kilajesAbierto = false;
@@ -1697,6 +1754,76 @@
     window.addEventListener("kk:modal-cerrado", (e) => {
       if (e.detail === "modal-candado") { lockUser.value = ""; lockPass.value = ""; lockError.textContent = ""; }
     });
+
+    /* CALCULADORA: CORTE, PLEGADO y FILETE por bonos (+ sueldo del día si la regla lo tiene) */
+    (() => {
+      const num = (v) => { const n = parseFloat(String(v).replace(",", ".")); return isFinite(n) && n > 0 ? n : 0; };
+      const fmt = (n) => n.toLocaleString("es", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+      /* inicio = kilos del primer bono · paso = cada cuántos kilos otro bono · valor = S/ por bono · sueldo = S/ por día (0 = sin sueldo) */
+      const REGLAS = {
+        corte: { 3: { inicio: 80, paso: 20, valor: 5, sueldo: 40.5 },
+                 2: { inicio: 90, paso: 20, valor: 5, sueldo: 40.5 } },
+        plegado: { inicio: 120, paso: 20, valor: 5, sueldo: 0 },
+        filete:  { inicio: 7,   paso: 3,  valor: 5, sueldo: 0 }
+      };
+      let modo = null;
+      const kg = (id) => num($("#k-" + id).value);
+
+      function calcArea(id, r) {
+        const k = kg(id);
+        const bonos = k >= r.inicio ? Math.floor((k - r.inicio) / r.paso) + 1 : 0;
+        const sueldo = k > 0 ? r.sueldo : 0;
+        const total = bonos * r.valor + sueldo;
+        $("#bonos-" + id).textContent = bonos;
+        $("#total-" + id).textContent = fmt(total);
+        const d = $("#detalle-" + id);
+        d.classList.remove("is-warn");
+        d.textContent = k > 0
+          ? `${bonos} ${bonos === 1 ? "bono" : "bonos"} = S/ ${fmt(bonos * r.valor)}` + (r.sueldo ? ` + sueldo del día S/ ${fmt(sueldo)}` : "")
+          : `Primer bono desde ${r.inicio} kg · cada ${r.paso} kg = S/ ${fmt(r.valor)}`;
+        return { k, total };
+      }
+
+      function calcCorte() {
+        const k = kg("corte"), d = $("#corteDetalle");
+        if (!modo) {
+          $("#corteBonos").textContent = 0; $("#corteTotal").textContent = fmt(0);
+          d.textContent = "Marca 2 cortes o 3 cortes."; d.classList.remove("is-warn");
+          return { k, total: 0 };
+        }
+        const r = REGLAS.corte[modo];
+        const bonos = k >= r.inicio ? Math.floor((k - r.inicio) / r.paso) + 1 : 0;
+        const sueldo = k > 0 ? r.sueldo : 0;
+        const total = bonos * r.valor + sueldo;
+        $("#corteBonos").textContent = bonos;
+        $("#corteTotal").textContent = fmt(total);
+        d.classList.remove("is-warn");
+        d.textContent = k > 0
+          ? `${bonos} ${bonos === 1 ? "bono" : "bonos"} = S/ ${fmt(bonos * r.valor)} + sueldo del día S/ ${fmt(sueldo)}`
+          : `Primer bono desde ${r.inicio} kg · cada ${r.paso} kg = S/ ${fmt(r.valor)}`;
+        return { k, total };
+      }
+
+      function calcular() {
+        const c = calcCorte(), p = calcArea("plegado", REGLAS.plegado), f = calcArea("filete", REGLAS.filete);
+        $("#calcKilos").textContent = fmt(c.k + p.k + f.k);
+        $("#calcPago").textContent = fmt(c.total + p.total + f.total);
+      }
+
+      $$("#calcCorte [data-modo]").forEach((b) => b.addEventListener("click", () => {
+        modo = modo === b.dataset.modo ? null : b.dataset.modo;
+        $$("#calcCorte [data-modo]").forEach((x) => x.setAttribute("aria-pressed", String(x.dataset.modo === modo)));
+        calcular();
+      }));
+      $$("#calc input").forEach((i) => i.addEventListener("input", calcular));
+      $("#calcLimpiar").addEventListener("click", () => {
+        $$("#calc input").forEach((i) => (i.value = ""));
+        modo = null;
+        $$("#calcCorte [data-modo]").forEach((x) => x.setAttribute("aria-pressed", "false"));
+        calcular();
+      });
+      calcular();
+    })();
 
     /* CONTACTOS: 3 columnas (Fileteras 01-70 · Plegadoras 01-10 · Cortadoras 01-20), buscador y filtros */
     const cFilas = $$("#contactosCols .contact-row");
@@ -2337,6 +2464,33 @@
       }
       ctFilas.forEach(pintarFilaContacto);
     }
+
+    /* VER PESOS (Personal): abre el PNG de esa persona (carpeta del grupo + número). No depende de KILAJES. */
+    const CT_CARPETA = { filetera: "fileteras", plegadora: "plegadoras", cortadora: "cortadoras" };
+    async function verPesoPersona(fila) {
+      const tipo = fila.dataset.tipo, num = pad(+fila.dataset.numero);
+      const nombre = (ctData[tipo][num] && ctData[tipo][num].nombre) || fila.dataset.nombreOrig;
+      const body = $("#previewBody");
+      $("#previewTitle").textContent = `${nombre} · N° ${num}`;
+      body.innerHTML = '<div class="files__status">Cargando imagen…</div>';
+      window.abrirModal("modal-preview");
+      let url = "";
+      try {
+        const { data } = await bucket().createSignedUrl(`${CT_CARPETA[tipo]}/${num}.png`, 3600);
+        url = data?.signedUrl || "";
+      } catch (e) { /* sin imagen */ }
+      if (!url) { body.innerHTML = '<div class="files__status">Esta persona todavía no tiene imagen de pesos.</div>'; return; }
+      body.innerHTML = "";
+      const img = new Image();
+      img.className = "preview__img";
+      img.alt = `Pesos de ${nombre}`;
+      img.onerror = () => { body.innerHTML = '<div class="files__status">No se pudo cargar la imagen.</div>'; };
+      img.src = url;
+      body.appendChild(img);
+    }
+    ctFilas.forEach((fila) => {
+      fila.querySelector("[data-ver-pesos]")?.addEventListener("click", () => verPesoPersona(fila));
+    });
 
     async function cargarContactos() {
       try {
