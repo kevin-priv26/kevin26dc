@@ -595,6 +595,13 @@
     .files__info .list__main strong { overflow-wrap: anywhere; }
     .btn--danger:hover { background: var(--danger); border-color: var(--danger); color: var(--text); }
 
+    #modal-preview { z-index: 90; background: rgba(0,0,0,0.78); }
+    #modal-preview .modal__box { max-width: 1100px; max-height: 88vh; box-shadow: 0 30px 100px rgba(0,0,0,0.9), 0 0 0 1px rgba(255,255,255,0.12); }
+    #modal-preview .preview__wrap { max-height: 60vh; }
+    .preview__tabs { display: flex; gap: 0.4rem; flex-wrap: wrap; }
+    .preview__tab { padding: 0.4rem 0.9rem; border: 1px solid var(--line-strong); border-radius: 999px; font-family: var(--font-mono); font-size: 0.75rem; color: var(--muted); transition: background 0.3s, color 0.3s; }
+    .preview__tab:hover { color: var(--text); }
+    .preview__tab.is-active { background: var(--text); color: var(--bg); border-color: var(--text); }
     .preview__img { width: 100%; max-height: 70vh; object-fit: contain; border-radius: 12px; border: 1px solid var(--line); background: var(--surface-2); }
     .preview__wrap { overflow: auto; max-height: 62vh; border: 1px solid var(--line); border-radius: 12px; }
     .preview__table { border-collapse: collapse; width: max-content; min-width: 100%; font-family: var(--font-mono); font-size: 0.78rem; }
@@ -684,7 +691,7 @@
       <p class="tag reveal" style="--i:1">Panel privado</p>
       <h1 class="hero__title reveal" style="--i:2">KINGKASS</h1>
       <div class="hero__line reveal" style="--i:3"></div>
-      <p class="hero__sub reveal" style="--i:3">Gestión centralizada de pesos, contactos y turnos.</p>
+      <p class="hero__sub reveal" style="--i:3">Gestión centralizada de pesos, personal y turnos.</p>
     </header>
 
     <nav class="menu" aria-label="Secciones">
@@ -710,7 +717,7 @@
           </span>
         </div>
         <div>
-          <div class="menu__label">CONTACTOS</div>
+          <div class="menu__label">PERSONAL</div>
           <span class="menu__cta">Abrir <span class="menu__arrow">→</span></span>
         </div>
       </button>
@@ -805,13 +812,13 @@
   <div class="modal" id="modal-contactos" role="dialog" aria-modal="true" aria-labelledby="t-contactos">
     <div class="modal__box">
       <div class="modal__head">
-        <h3 class="modal__title" id="t-contactos">CONTACTOS</h3>
+        <h3 class="modal__title" id="t-contactos">PERSONAL</h3>
         <button class="modal__close" data-close aria-label="Cerrar">✕</button>
       </div>
       <div class="modal__body">
-        <img class="modal-img" id="contactosImg" alt="Contactos" />
+        <img class="modal-img" id="contactosImg" alt="Personal" />
 
-        <p>Directorio de contactos principales.</p>
+        <p>Fileteras, plegadoras y cortadoras: nombre y teléfono.</p>
 
         <div class="cfilter">
           <div class="field" style="margin:0"><input type="search" id="contactoBuscar" placeholder="Buscar por nombre o código (01-70)" aria-label="Buscar contacto por nombre o código" autocomplete="off" /></div>
@@ -1759,10 +1766,10 @@
       ctx.fillText(texto, 700, 306);
       return c.toDataURL("image/png");
     }
-    $("#contactosImg").src = bannerImg("CONTACTOS");
+    $("#contactosImg").src = bannerImg("PERSONAL");
     $("#grupoImg").src = bannerImg("FILETERAS");
     const redibujarBanners = () => {
-      $("#contactosImg").src = bannerImg("CONTACTOS");
+      $("#contactosImg").src = bannerImg("PERSONAL");
       $("#grupoImg").src = bannerImg($("#grupoTitle").textContent.trim());
     };
     document.fonts?.load("500 64px 'Space Grotesk'").then(redibujarBanners).catch(() => {});
@@ -2026,28 +2033,61 @@
           body.append(tablaDe(filas), notaDe(filas.length));
           return;
         }
-        const mod = await import("https://esm.sh/xlsx@0.18.5");
-        const X = mod.default?.read ? mod.default : mod;
-        const wb = X.read(await res.arrayBuffer(), { type: "array" });
+        const X = await cargarXLSX();
+        const wb = X.read(await res.arrayBuffer(), { type: "array", cellDates: true });
         const cont = document.createElement("div");
         const pintar = (nombre) => {
           cont.innerHTML = "";
-          const filas = X.utils.sheet_to_json(wb.Sheets[nombre], { header: 1, defval: "" });
+          const filas = X.utils.sheet_to_json(wb.Sheets[nombre], { header: 1, defval: "", raw: false, blankrows: false });
           cont.append(tablaDe(filas), notaDe(filas.length));
         };
         body.innerHTML = "";
-        if (wb.SheetNames.length > 1) {
-          const sel = document.createElement("select");
-          sel.className = "preview__sheet";
-          wb.SheetNames.forEach((n) => sel.add(new Option(n, n)));
-          sel.addEventListener("change", () => pintar(sel.value));
-          body.appendChild(sel);
-        }
         body.appendChild(cont);
+        if (wb.SheetNames.length > 1) {
+          const tabs = document.createElement("div");
+          tabs.className = "preview__tabs";
+          wb.SheetNames.forEach((n, i) => {
+            const t = document.createElement("button");
+            t.type = "button";
+            t.className = "preview__tab" + (i === 0 ? " is-active" : "");
+            t.textContent = n;
+            t.addEventListener("click", () => {
+              tabs.querySelectorAll(".preview__tab").forEach((x) => x.classList.toggle("is-active", x === t));
+              pintar(n);
+            });
+            tabs.appendChild(t);
+          });
+          body.appendChild(tabs);
+        }
         pintar(wb.SheetNames[0]);
-      } catch {
-        body.innerHTML = '<div class="files__status is-error">No se pudo mostrar la vista previa. Prueba con “Descargar”.</div>';
+      } catch (err) {
+        console.error("Vista previa:", err);
+        const motivo = err?.message === "libreria"
+          ? "No se pudo cargar el lector de Excel (revisa tu conexión a internet)."
+          : "No se pudo mostrar la vista previa.";
+        body.innerHTML = `<div class="files__status is-error">${motivo} Prueba con “Descargar”.</div>`;
       }
+    }
+
+    /* Lector de Excel (SheetJS): se carga al primer uso, con respaldo en otro servidor */
+    let _xlsxPromesa = null;
+    function cargarXLSX() {
+      if (window.XLSX) return Promise.resolve(window.XLSX);
+      if (_xlsxPromesa) return _xlsxPromesa;
+      const fuentes = [
+        "https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js",
+        "https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"
+      ];
+      const probar = (i) => new Promise((ok, fallo) => {
+        if (i >= fuentes.length) return fallo(new Error("libreria"));
+        const sc = document.createElement("script");
+        sc.src = fuentes[i];
+        sc.onload = () => window.XLSX ? ok(window.XLSX) : probar(i + 1).then(ok, fallo);
+        sc.onerror = () => { sc.remove(); probar(i + 1).then(ok, fallo); };
+        document.head.appendChild(sc);
+      });
+      _xlsxPromesa = probar(0).catch((e) => { _xlsxPromesa = null; throw e; });
+      return _xlsxPromesa;
     }
 
     $("#previewAsViewer").addEventListener("click", () => {
@@ -2266,7 +2306,7 @@
       const acc = fila.querySelector(".actions");
       let wa = acc.querySelector("a[data-wa]");
       const dig = ctDigitos(tel);
-      if (dig) {
+      if (dig && fila.dataset.tipo !== "filetera") {
         if (!wa) {
           wa = document.createElement("a");
           wa.className = "btn btn--small";
@@ -2309,6 +2349,10 @@
           }
         }
       } catch (e) { /* sin datos guardados todavía */ }
+      try {
+        const loc = JSON.parse(localStorage.getItem("kk_contactos") || "null");
+        if (loc) ctData = { filetera: loc.filetera || {}, plegadora: loc.plegadora || {}, cortadora: loc.cortadora || {} };
+      } catch (e) { /* sin datos locales */ }
       aplicarContactos();
     }
 
@@ -2320,7 +2364,11 @@
         ({ error } = await bucket().upload(CT_PATH, blob, { contentType: "application/json", upsert: false }));
       }
       if (error) console.error(error);
-      return !error;
+      try {
+        if (!error) localStorage.removeItem("kk_contactos");
+        else localStorage.setItem("kk_contactos", JSON.stringify(ctData));
+      } catch (e) { return !error; }
+      return true;
     }
 
     function editarCampo(fila, campo) {
