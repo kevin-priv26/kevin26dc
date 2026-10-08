@@ -2688,6 +2688,8 @@
     const NOMBRES_ORIG = JSON.parse(JSON.stringify(NOMBRES_GRUPO));
     let ctData = { filetera: {}, plegadora: {}, cortadora: {} };
     let ctCargado = false;
+    let ctFirma = "";
+    let ctErrorMsg = "";
     const ctFilas = [...document.querySelectorAll('#contactosCols .contact-row')];
     const ctSinAcentos = (t) => t.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
     const ctDigitos = (t) => (t || "").replace(/\D/g, "");
@@ -2824,38 +2826,57 @@
       fila.querySelector("[data-ver-pesos]")?.addEventListener("click", () => verPesoPersona(fila));
     });
 
-    async function cargarContactos() {
+    const ctNormalizar = (j) => ({ filetera: (j && j.filetera) || {}, plegadora: (j && j.plegadora) || {}, cortadora: (j && j.cortadora) || {} });
+    /* Descarga datos.json y repinta solo si cambió. Se llama al entrar y cada pocos segundos
+       (sincronización automática entre dispositivos). */
+    async function cargarContactos(silencioso) {
+      if (document.querySelector("#contactosCols .contact-row[data-editando]")) return; /* no pisar una edición en curso */
+      let remoto = null;
       try {
         const { data: f } = await bucket().createSignedUrl(CT_PATH, 60);
         if (f?.signedUrl) {
           const r = await fetch(f.signedUrl, { cache: "no-store" });
-          if (r.ok) {
-            const j = await r.json();
-            ctData = { filetera: j.filetera || {}, plegadora: j.plegadora || {}, cortadora: j.cortadora || {} };
-          }
+          if (r.ok) remoto = ctNormalizar(await r.json());
         }
       } catch (e) { /* sin datos guardados todavía */ }
+
+      /* cambios antiguos que quedaron solo en este navegador (el admin los sube al servidor) */
       try {
         const loc = JSON.parse(localStorage.getItem("kk_contactos") || "null");
-        if (loc) ctData = { filetera: loc.filetera || {}, plegadora: loc.plegadora || {}, cortadora: loc.cortadora || {} };
+        if (loc && esAdmin) {
+          ctData = ctNormalizar(loc);
+          if (await guardarContactos()) { ctFirma = JSON.stringify(ctData); aplicarContactos(); return; }
+        }
       } catch (e) { /* sin datos locales */ }
-      aplicarContactos();
+
+      if (remoto) {
+        const firma = JSON.stringify(remoto);
+        if (firma === ctFirma) return;
+        ctFirma = firma;
+        ctData = remoto;
+        aplicarContactos();
+      } else if (!silencioso) aplicarContactos();
     }
 
     async function guardarContactos() {
+      ctErrorMsg = "";
       const blob = new Blob([JSON.stringify(ctData)], { type: "application/json" });
       let { error } = await bucket().upload(CT_PATH, blob, { contentType: "application/json", upsert: true });
       if (error) {
         await bucket().remove([CT_PATH]);
         ({ error } = await bucket().upload(CT_PATH, blob, { contentType: "application/json", upsert: false }));
       }
-      if (error) console.error(error);
-      try {
-        if (!error) localStorage.removeItem("kk_contactos");
-        else localStorage.setItem("kk_contactos", JSON.stringify(ctData));
-      } catch (e) { return !error; }
+      if (error) { console.error(error); ctErrorMsg = error.message || "error desconocido"; return false; }
+      ctFirma = JSON.stringify(ctData);
+      try { localStorage.removeItem("kk_contactos"); } catch (e) { /* sin almacenamiento */ }
       return true;
     }
+
+    /* sincronización automática: cada 5 s y al volver a la pestaña / recuperar conexión */
+    setInterval(() => { if (ctCargado && !document.hidden) cargarContactos(true); }, 5000);
+    document.addEventListener("visibilitychange", () => { if (!document.hidden && ctCargado) cargarContactos(true); });
+    window.addEventListener("online", () => { if (ctCargado) cargarContactos(true); });
+    window.addEventListener("focus", () => { if (ctCargado) cargarContactos(true); });
 
     function editarCampo(fila, campo) {
       if (!ctPuedeEditar() || fila.dataset.editando) return;
@@ -2908,7 +2929,7 @@
         if (!(await guardarContactos())) {
           if (previo) ctData[tipo][key] = previo; else delete ctData[tipo][key];
           bOk.disabled = false;
-          return error("No se pudo guardar. Revisa tu conexión o los permisos del almacenamiento.");
+          return error(`No se pudo guardar en el servidor (${ctErrorMsg || "sin conexión"}). Revisa la conexión o los permisos de Storage para la carpeta contactos.`);
         }
         cerrar();
         aplicarContactos();
