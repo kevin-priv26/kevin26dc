@@ -2082,8 +2082,10 @@
       if (esAdmin) $("#adminWho").textContent = `Administrador · ${sesion.user.email.replace("@kingkass.app", "")}`;
     }
 
-    async function cargarArchivos() {
+    let archivosFirma = "";
+    async function cargarArchivos(silencioso = false) {
       const actual = seccion;
+      if (!silencioso) archivosFirma = "";
       const lista = actual === "movimientos" ? movList : esCarpeta(actual) ? carpetaList : filesList;
       let data, error;
       try {
@@ -2096,6 +2098,7 @@
       }
       if (actual !== seccion) return;
       if (error) {
+        if (silencioso) return;
         lista.innerHTML = '<div class="files__status is-error">No se pudieron cargar los archivos.</div>';
         return;
       }
@@ -2108,11 +2111,6 @@
           size: o.metadata?.size || 0,
           uploadedAt: o.created_at,
         }));
-
-      if (archivos.length) {
-        const { data: firmadas } = await bucket().createSignedUrls(archivos.map((a) => a.key), 3600);
-        archivos.forEach((a, i) => { a.url = firmadas?.[i]?.signedUrl || ""; });
-      }
       /* cuadros (PNG) de cada Excel: <carpeta>/cuadros/<archivo>.png */
       if (esCarpeta(actual) && archivos.length) {
         const hay = new Set();
@@ -2138,6 +2136,17 @@
           a.previaPath = `${actual}/previas/${nombreKey}.png`;
           a.tienePrevia = hayP.has(`${nombreKey}.png`);
         });
+      }
+      /* ¿cambió algo? si no, no se redibuja (ni se firman URLs). Cada ~50 min se fuerza para renovar las URLs firmadas */
+      const firma = actual + "|" + Math.floor(Date.now() / 3000000) + "|" + JSON.stringify(
+        archivos.map((a) => [a.key, a.size, a.uploadedAt, !!a.tienePrevia, !!a.tieneCuadro])
+      );
+      if (silencioso && firma === archivosFirma) return;
+      archivosFirma = firma;
+
+      if (archivos.length) {
+        const { data: firmadas } = await bucket().createSignedUrls(archivos.map((a) => a.key), 3600);
+        archivos.forEach((a, i) => { a.url = firmadas?.[i]?.signedUrl || ""; });
       }
       if (actual !== seccion) return;
 
@@ -2877,6 +2886,22 @@
     document.addEventListener("visibilitychange", () => { if (!document.hidden && ctCargado) cargarContactos(true); });
     window.addEventListener("online", () => { if (ctCargado) cargarContactos(true); });
     window.addEventListener("focus", () => { if (ctCargado) cargarContactos(true); });
+
+    /* sincronización automática de ARCHIVOS (KILAGES, meses y VER PESOS): cada 5 s, solo redibuja si hubo cambios */
+    let sincArchivos = false;
+    const abierto = (id) => document.getElementById(id).classList.contains("is-open");
+    async function sincronizarArchivos() {
+      if (sincArchivos || document.hidden || $("#app").classList.contains("hidden")) return;
+      const enKilages = seccion === "movimientos" && abierto("modal-pesos") && !abierto("modal-corte") && !abierto("modal-carpeta");
+      const enCarpeta = esCarpeta(seccion) && abierto("modal-carpeta");
+      if (!enKilages && !enCarpeta) return;
+      sincArchivos = true;
+      try { await cargarArchivos(true); } finally { sincArchivos = false; }
+    }
+    setInterval(sincronizarArchivos, 5000);
+    document.addEventListener("visibilitychange", sincronizarArchivos);
+    window.addEventListener("online", sincronizarArchivos);
+    window.addEventListener("focus", sincronizarArchivos);
 
     function editarCampo(fila, campo) {
       if (!ctPuedeEditar() || fila.dataset.editando) return;
