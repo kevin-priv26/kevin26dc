@@ -683,6 +683,16 @@
     .preview__table tr:first-child td { font-weight: 500; background: var(--surface-2); position: sticky; top: 0; }
     .preview__sheet { justify-self: start; background: var(--surface-2); color: var(--text); border: 1px solid var(--line-strong); border-radius: 8px; padding: 0.4rem 0.6rem; font-family: var(--font-mono); font-size: 0.78rem; }
 
+    /* CONTACTOS: botón de teléfono (muestra/oculta los números) */
+    .tel-btn { margin-left: auto; width: 38px; height: 38px; flex: none; display: grid; place-items: center; border-radius: 50%;
+      border: 1px solid var(--line-strong); background: transparent; color: var(--text); cursor: pointer;
+      transition: background 0.3s var(--ease), color 0.3s var(--ease), transform 0.3s var(--ease); }
+    .tel-btn:hover { transform: translateY(-1px); border-color: var(--text); }
+    .tel-btn:focus-visible { outline: 2px solid var(--text); outline-offset: 3px; }
+    .tel-btn[aria-pressed="true"] { background: var(--text); color: var(--bg); border-color: var(--text); }
+    .tel-oculto span[data-tel], .tel-oculto .actions a[data-wa] { display: none !important; }
+    #modal-candado { z-index: 100; }
+
     @keyframes rise { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: none; } }
     @keyframes fadeIn { from { opacity: 0; transform: scale(1.03); } to { opacity: 1; transform: none; } }
     @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.35; } }
@@ -897,25 +907,6 @@
     </footer>
   </main>
 
-  <!-- MODAL: ACCESO KILAGES (candado) -->
-  <div class="modal" id="modal-candado" role="dialog" aria-modal="true" aria-labelledby="t-candado">
-    <div class="modal__box" style="max-width:420px">
-      <div class="modal__head">
-        <h3 class="modal__title" id="t-candado">🔒 ACCESO</h3>
-        <button class="modal__close" data-close aria-label="Cerrar">✕</button>
-      </div>
-      <div class="modal__body">
-        <p>Ingresa usuario y contraseña para ver los KILAGES.</p>
-        <div class="lock-form" id="lockForm">
-          <div class="field"><input type="text" id="lockUser" placeholder="Usuario" aria-label="Usuario" autocomplete="off" autocapitalize="none" spellcheck="false" /></div>
-          <div class="field"><input type="password" id="lockPass" placeholder="Contraseña" aria-label="Contraseña" autocomplete="off" /></div>
-          <button type="button" class="btn btn--solid" id="lockBtn">Entrar</button>
-          <div class="login__error" id="lockError" role="alert"></div>
-        </div>
-      </div>
-    </div>
-  </div>
-
   <!-- MODAL: CALCULADORA -->
   <div class="modal" id="modal-calc" role="dialog" aria-modal="true" aria-labelledby="t-calc">
     <div class="modal__box">
@@ -1002,11 +993,12 @@
             <button type="button" class="chip" data-tipo="filetera" aria-pressed="false"><span class="chip__check" aria-hidden="true">✓</span>Filetera</button>
             <button type="button" class="chip" data-tipo="plegadora" aria-pressed="false"><span class="chip__check" aria-hidden="true">✓</span>Plegadora</button>
             <button type="button" class="chip" data-tipo="cortadora" aria-pressed="false"><span class="chip__check" aria-hidden="true">✓</span>Cortadora</button>
+            <button type="button" class="tel-btn" id="telToggle" aria-pressed="false" aria-label="Mostrar números de teléfono" title="Mostrar números de teléfono (pide usuario y contraseña)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z"/></svg></button>
           </div>
           <div class="files__status" id="contactoStatus" role="status" aria-live="polite"></div>
         </div>
 
-        <div class="ccols" id="contactosCols">
+        <div class="ccols tel-oculto" id="contactosCols">
         <section class="ccol" data-tipo="filetera">
           <h4 class="ccol__title">FILETERAS <span class="ccol__count" data-count></span></h4>
           <div class="list">
@@ -1712,6 +1704,25 @@
     </div>
   </div>
 
+  <!-- MODAL: ACCESO KILAGES (candado) -->
+  <div class="modal" id="modal-candado" role="dialog" aria-modal="true" aria-labelledby="t-candado">
+    <div class="modal__box" style="max-width:420px">
+      <div class="modal__head">
+        <h3 class="modal__title" id="t-candado">🔒 ACCESO</h3>
+        <button class="modal__close" data-close aria-label="Cerrar">✕</button>
+      </div>
+      <div class="modal__body">
+        <p id="lockMsg">Ingresa usuario y contraseña para ver los KILAGES.</p>
+        <div class="lock-form" id="lockForm">
+          <div class="field"><input type="text" id="lockUser" placeholder="Usuario" aria-label="Usuario" autocomplete="off" autocapitalize="none" spellcheck="false" /></div>
+          <div class="field"><input type="password" id="lockPass" placeholder="Contraseña" aria-label="Contraseña" autocomplete="off" /></div>
+          <button type="button" class="btn btn--solid" id="lockBtn">Entrar</button>
+          <div class="login__error" id="lockError" role="alert"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- VENTANA FLOTANTE: VER CUADRO (Excel / CSV) -->
   <div class="cuadro hidden" id="cuadro" role="dialog" aria-label="Cuadro del archivo">
     <div class="cuadro__bar" id="cuadroBar">
@@ -1831,10 +1842,20 @@
     /* CANDADO KILAGES: usuario y contraseña para acceder */
     const KILAJES_USER = "mercedes2026", KILAJES_PASS = "mercedes2026";
     let kilajesAbierto = false;
+    let candadoDestino = "kilajes";   /* "kilajes" o "tel" */
+    function abrirCandado(destino) {
+      candadoDestino = destino;
+      $("#lockMsg").textContent = destino === "tel"
+        ? "Ingresa usuario y contraseña para ver los números de teléfono."
+        : "Ingresa usuario y contraseña para ver los KILAGES.";
+      abrirModal("modal-candado");
+      lockUser.focus();
+    }
     const lockUser = $("#lockUser"), lockPass = $("#lockPass"), lockError = $("#lockError");
 
     function intentarKilajes() {
       if (lockUser.value.trim() === KILAJES_USER && lockPass.value === KILAJES_PASS) {
+        if (candadoDestino === "tel") { cerrarModal($("#modal-candado")); setTel(true); return; }
         kilajesAbierto = true;
         $("#kilajesLock").classList.add("is-open");
         $("#kilajesLock").innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 7.5-2"/></svg>';
@@ -1854,8 +1875,7 @@
       if (!item) return;
       e.stopPropagation();
       e.preventDefault();
-      abrirModal("modal-candado");
-      lockUser.focus();
+      abrirCandado("kilajes");
     }, true);
 
     $("#lockBtn").addEventListener("click", intentarKilajes);
@@ -1972,6 +1992,19 @@
       filtrarContactos();
     }));
     filtrarContactos();
+
+    /* TELÉFONOS: ocultos hasta activar el icono (pide usuario y contraseña); al cerrar sesión se vuelven a ocultar */
+    const telBtn = $("#telToggle");
+    let telVisible = false;
+    function setTel(v) {
+      telVisible = v;
+      $("#contactosCols").classList.toggle("tel-oculto", !v);
+      telBtn.setAttribute("aria-pressed", String(v));
+      const t = v ? "Ocultar números de teléfono" : "Mostrar números de teléfono (pide usuario y contraseña)";
+      telBtn.title = t; telBtn.setAttribute("aria-label", t);
+    }
+    telBtn.addEventListener("click", () => (telVisible ? setTel(false) : abrirCandado("tel")));
+    window.addEventListener("kk:logout", () => setTel(false));
 
     /* BRILLO QUE SIGUE AL MOUSE */
     $$(".menu__item").forEach(item => {
