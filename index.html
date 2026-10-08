@@ -635,6 +635,23 @@
     .files__info .list__main strong { overflow-wrap: anywhere; }
     .btn--danger:hover { background: var(--danger); border-color: var(--danger); color: var(--text); }
 
+    /* VER PESOS · semana (7 días) */
+    .sem-nav { display: flex; align-items: center; justify-content: space-between; gap: 0.8rem; flex-wrap: wrap; }
+    .sem-nav__mid { display: flex; align-items: center; gap: 0.8rem; flex-wrap: wrap; justify-content: center; flex: 1; }
+    .sem-nav__mid strong { font-family: var(--font-mono); font-size: 0.85rem; letter-spacing: 0.1em; font-weight: 500; }
+    .sem-row { align-items: center; }
+    .sem-row .list__main strong { letter-spacing: 0.1em; }
+    .sem-row .actions { align-items: center; }
+    .sem-row .btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; box-shadow: none; background: transparent; color: var(--text); border-color: var(--line-strong); }
+    .sem-row.is-falto { background: transparent; border-style: dashed; }
+    .sem-row.is-falto .list__main { opacity: 0.45; }
+    .sem-row.is-falto .list__main strong { text-decoration: line-through; }
+    .sem-tag { font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); }
+    .sem-tag--no { color: var(--danger); font-weight: 600; }
+    .sem-asist { display: inline-flex; gap: 0.4rem; }
+    .sem-asist .chip { padding: 0.4rem 0.8rem; font-size: 0.66rem; }
+    .sem-asist .chip[data-val="no"][aria-pressed="true"] { background: var(--danger); border-color: var(--danger); color: #fff; }
+
     #modal-preview { z-index: 90; background: rgba(0,0,0,0.78); }
     #modal-preview .modal__box { max-width: 1100px; max-height: 88vh; box-shadow: 0 30px 100px rgba(0,0,0,0.9), 0 0 0 1px rgba(255,255,255,0.12); }
     #modal-preview .preview__wrap { max-height: 60vh; }
@@ -1669,6 +1686,28 @@
         <p id="carpetaIntro">Archivos Excel e imágenes. Pulsa “Descargar” para guardarlos.</p>
         <div class="list" id="carpetaList"><div class="files__status">Cargando archivos…</div></div>
         <div class="admin-slot" id="slotCarpeta"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: PESOS DE LA SEMANA (7 días) -->
+  <div class="modal" id="modal-semana" role="dialog" aria-modal="true" aria-labelledby="t-semana">
+    <div class="modal__box">
+      <div class="modal__head">
+        <h3 class="modal__title" id="t-semana" style="overflow-wrap:anywhere;">PESOS</h3>
+        <button class="modal__close" data-close aria-label="Cerrar">✕</button>
+      </div>
+      <div class="modal__body">
+        <div class="sem-nav">
+          <button type="button" class="btn btn--small" id="semPrev" aria-label="Semana anterior">←</button>
+          <div class="sem-nav__mid">
+            <strong id="semRango"></strong>
+            <button type="button" class="btn btn--small" id="semHoy">ESTA SEMANA</button>
+          </div>
+          <button type="button" class="btn btn--small" id="semNext" aria-label="Semana siguiente">→</button>
+        </div>
+        <div class="list" id="semLista"><div class="files__status">Cargando…</div></div>
+        <div class="files__status" id="semStatus" role="status" aria-live="polite"></div>
       </div>
     </div>
   </div>
@@ -2822,6 +2861,7 @@
     }
 
     function renderContactosAdmin() {
+      if (document.getElementById("modal-semana")?.classList.contains("is-open")) semRender();
       if (!ctPuedeEditar()) {
         ctFilas.forEach((fila) => { delete fila.dataset.editando; fila.querySelector(".iedit")?.remove(); });
       }
@@ -2862,8 +2902,239 @@
     function verPesoPersona(fila) {
       const tipo = fila.dataset.tipo, num = pad(+fila.dataset.numero);
       const nombre = (ctData[tipo][num] && ctData[tipo][num].nombre) || fila.dataset.nombreOrig;
-      abrirCarpeta(`personal/${tipo}-${num}`, `PESOS · ${nombre} (${num})`, `${CT_TIPO[tipo]} N° ${num} · Solo imágenes PNG, JPG, JPEG o WEBP · máx. 5 MB por archivo`);
+      semAbrir({ clave: `${tipo}-${num}`, nombre, num });
     }
+
+    /* ===== VER PESOS · semana de 7 días =====
+       Imagen PNG de cada día:  personal/<tipo>-<NN>/semana/<AAAA-MM-DD>.png  (la sube solo el admin)
+       Asistencia (solo se guardan las faltas): contactos/asistencia.json → { "<tipo>-<NN>": { "AAAA-MM-DD": "no" } } */
+    const SEM_DIAS = ["LUNES", "MARTES", "MIÉRCOLES", "JUEVES", "VIERNES"];   /* FILETE, PLEGADO y CORTE: solo de lunes a viernes */
+    const SEM_MES = ["ene", "feb", "mar", "abr", "may", "jun", "jul", "ago", "sep", "oct", "nov", "dic"];
+    const SEM_ASIST_PATH = "contactos/asistencia.json";
+    const semLista = $("#semLista"), semStatus = $("#semStatus");
+    let semPersona = null, semLunes = null, semImgs = new Set(), semAsist = {}, semFirma = "";
+
+    const semIso = (d) => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+    function semLunesDe(d) {
+      const x = new Date(d.getFullYear(), d.getMonth(), d.getDate());
+      x.setDate(x.getDate() - ((x.getDay() + 6) % 7));
+      return x;
+    }
+    const semDias = () => Array.from({ length: SEM_DIAS.length }, (_, i) => { const d = new Date(semLunes); d.setDate(d.getDate() + i); return d; });
+    const semRutaImg = (iso) => `personal/${semPersona.clave}/semana/${iso}.png`;
+
+    function semAbrir(persona) {
+      semPersona = persona;
+      semLunes = semLunesDe(new Date());
+      semImgs = new Set(); semAsist = {}; semFirma = "";
+      $("#t-semana").textContent = `PESOS · ${persona.nombre} (${persona.num})`;
+      semLista.innerHTML = '<div class="files__status">Cargando…</div>';
+      estado(semStatus, ctPuedeEditar() ? "Sube un PNG por día (máx. 5 MB) y marca la asistencia." : "");
+      window.abrirModal("modal-semana");
+      semCargar();
+    }
+
+    async function semLeerAsist() {
+      try {
+        const { data, error } = await bucket().createSignedUrl(SEM_ASIST_PATH, 60);
+        if (error) return /not.?found/i.test(error.message || "") ? { ok: true, data: {} } : { ok: false };
+        const r = await fetch(data.signedUrl, { cache: "no-store" });
+        if (r.status === 404 || r.status === 400) return { ok: true, data: {} };
+        if (!r.ok) return { ok: false };
+        const j = await r.json();
+        return { ok: true, data: j && typeof j === "object" ? j : {} };
+      } catch (e) { return { ok: false }; }
+    }
+
+    async function semCargar(silencioso = false) {
+      const p = semPersona;
+      if (!p) return;
+      const imgs = new Set();
+      try {
+        const { data } = await bucket().list(`personal/${p.clave}/semana`, { limit: 1000 });
+        (data || []).filter((o) => o.id && /\.png$/i.test(o.name)).forEach((o) => imgs.add(o.name.replace(/\.png$/i, "")));
+      } catch (e) { /* sin imágenes */ }
+      const a = await semLeerAsist();
+      if (p !== semPersona) return;
+      if (a.ok) semAsist = a.data;
+      semImgs = imgs;
+      const firma = [...imgs].sort().join(",") + "|" + JSON.stringify(semAsist[p.clave] || {});
+      if (silencioso && firma === semFirma) return;
+      semFirma = firma;
+      semRender();
+    }
+
+    function semRender() {
+      const p = semPersona;
+      if (!p) return;
+      const admin = ctPuedeEditar();
+      const dias = semDias();
+      const ini = dias[0], fin = dias[dias.length - 1];
+      $("#semRango").textContent = `${pad(ini.getDate())} ${SEM_MES[ini.getMonth()]} – ${pad(fin.getDate())} ${SEM_MES[fin.getMonth()]} ${fin.getFullYear()}`;
+      const faltas = semAsist[p.clave] || {};
+      semLista.innerHTML = "";
+      dias.forEach((d, i) => {
+        const iso = semIso(d), falto = faltas[iso] === "no", hay = semImgs.has(iso);
+        const etiqueta = `${SEM_DIAS[i]} ${pad(d.getDate())}/${pad(d.getMonth() + 1)}`;
+
+        const row = document.createElement("div");
+        row.className = "list__row sem-row" + (falto ? " is-falto" : "");
+        const main = document.createElement("div");
+        main.className = "list__main";
+        const st = document.createElement("strong"); st.textContent = SEM_DIAS[i];
+        const sp = document.createElement("span"); sp.textContent = `${pad(d.getDate())}/${pad(d.getMonth() + 1)}/${d.getFullYear()}`;
+        main.append(st, sp);
+
+        const acc = document.createElement("div");
+        acc.className = "actions";
+
+        if (falto) {
+          const tag = document.createElement("span");
+          tag.className = "sem-tag sem-tag--no"; tag.textContent = "NO ASISTIÓ";
+          acc.appendChild(tag);
+        } else {
+          const ver = document.createElement("button");
+          ver.type = "button"; ver.className = "btn btn--small btn--pesos";
+          ver.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7S1 12 1 12z"/><circle cx="12" cy="12" r="3"/></svg>VER';
+          if (hay) ver.addEventListener("click", () => semVer(iso, etiqueta));
+          else { ver.disabled = true; ver.title = "Todavía no hay imagen"; }
+          acc.appendChild(ver);
+          if (!hay) {
+            const tag = document.createElement("span");
+            tag.className = "sem-tag"; tag.textContent = "Sin imagen";
+            acc.appendChild(tag);
+          }
+        }
+
+        if (admin) {
+          if (!falto) {
+            const sub = document.createElement("button");
+            sub.type = "button"; sub.className = "btn btn--small";
+            sub.textContent = hay ? "Reemplazar PNG" : "Subir PNG";
+            sub.addEventListener("click", () => { semSubirIso = iso; semSubirEtq = etiqueta; semFile.click(); });
+            acc.appendChild(sub);
+            if (hay) {
+              const del = document.createElement("button");
+              del.type = "button"; del.className = "btn btn--small btn--danger";
+              del.textContent = "Eliminar";
+              del.addEventListener("click", () => semEliminar(iso, etiqueta, del));
+              acc.appendChild(del);
+            }
+          }
+          const grp = document.createElement("div");
+          grp.className = "sem-asist"; grp.setAttribute("role", "group"); grp.setAttribute("aria-label", `Asistencia ${etiqueta}`);
+          [["si", "Asistió"], ["no", "No asistió"]].forEach(([val, txt]) => {
+            const c = document.createElement("button");
+            c.type = "button"; c.className = "chip"; c.dataset.val = val; c.textContent = txt;
+            c.setAttribute("aria-pressed", String((val === "no") === falto));
+            c.addEventListener("click", () => { if ((val === "no") !== falto) semMarcar(iso, etiqueta, val, grp); });
+            grp.appendChild(c);
+          });
+          acc.appendChild(grp);
+        }
+
+        row.append(main, acc);
+        semLista.appendChild(row);
+      });
+    }
+
+    /* el espectador solo mira: abre la imagen del día (si asistió y hay PNG) */
+    async function semVer(iso, etiqueta) {
+      const p = semPersona;
+      if (!p) return;
+      if ((semAsist[p.clave] || {})[iso] === "no") return;
+      const body = $("#previewBody");
+      $("#previewTitle").textContent = `${etiqueta} · ${p.nombre}`;
+      body.innerHTML = '<div class="files__status">Cargando…</div>';
+      window.abrirModal("modal-preview");
+      let url = "";
+      try {
+        const { data } = await bucket().createSignedUrl(semRutaImg(iso), 3600);
+        url = data?.signedUrl || "";
+      } catch (e) { /* sin URL */ }
+      const fallo = () => { body.innerHTML = '<div class="files__status is-error">No se pudo cargar la imagen.</div>'; };
+      if (!url) return fallo();
+      body.innerHTML = "";
+      const img = new Image();
+      img.className = "preview__img";
+      img.alt = `Pesos ${etiqueta}`;
+      img.draggable = false;
+      img.onerror = fallo;
+      img.src = url;
+      body.appendChild(img);
+    }
+
+    async function semGuardarAsist(data) {
+      const blob = new Blob([JSON.stringify(data)], { type: "application/json" });
+      let { error } = await bucket().upload(SEM_ASIST_PATH, blob, { contentType: "application/json", upsert: true });
+      if (error) {
+        await bucket().remove([SEM_ASIST_PATH]);
+        ({ error } = await bucket().upload(SEM_ASIST_PATH, blob, { contentType: "application/json", upsert: false }));
+      }
+      return error;
+    }
+
+    async function semMarcar(iso, etiqueta, valor, grp) {
+      const p = semPersona;
+      if (!p || !ctPuedeEditar()) return;
+      if (valor === "no" && semImgs.has(iso) && !confirm(`${etiqueta}: ya tiene una imagen. Si marcas “No asistió”, nadie podrá verla (la imagen se conserva). ¿Continuar?`)) return;
+      grp.querySelectorAll("button").forEach((b) => { b.disabled = true; });
+      estado(semStatus, "Guardando…");
+      const a = await semLeerAsist();                 /* se lee lo más reciente antes de escribir */
+      if (!a.ok) { estado(semStatus, "No se pudo leer la asistencia. Reintenta.", true); semRender(); return; }
+      const data = a.data;
+      data[p.clave] = data[p.clave] || {};
+      if (valor === "no") data[p.clave][iso] = "no"; else delete data[p.clave][iso];
+      if (!Object.keys(data[p.clave]).length) delete data[p.clave];
+      const error = await semGuardarAsist(data);
+      if (error) { estado(semStatus, `No se pudo guardar: ${error.message}`, true); semRender(); return; }
+      if (p !== semPersona) return;
+      semAsist = data;
+      semFirma = [...semImgs].sort().join(",") + "|" + JSON.stringify(semAsist[p.clave] || {});
+      estado(semStatus, valor === "no" ? `${etiqueta}: NO ASISTIÓ.` : `${etiqueta}: asistió.`);
+      semRender();
+    }
+
+    /* subir / eliminar PNG (solo admin) */
+    const semFile = document.createElement("input");
+    semFile.type = "file"; semFile.accept = "image/png"; semFile.className = "hidden";
+    document.body.appendChild(semFile);
+    let semSubirIso = null, semSubirEtq = "";
+    semFile.addEventListener("change", async () => {
+      const file = semFile.files[0], iso = semSubirIso, etq = semSubirEtq, p = semPersona;
+      semFile.value = "";
+      if (!file || !iso || !p || !ctPuedeEditar()) return;
+      if (file.type !== "image/png" && !/\.png$/i.test(file.name)) return estado(semStatus, "Solo se permiten archivos PNG.", true);
+      if (file.size > MAX_BYTES) return estado(semStatus, "El archivo supera 5 MB.", true);
+      estado(semStatus, `Subiendo ${etq}…`);
+      const ruta = `personal/${p.clave}/semana/${iso}.png`;
+      await bucket().remove([ruta]);
+      const { error } = await bucket().upload(ruta, file, { contentType: "image/png", upsert: false });
+      if (error) return estado(semStatus, error.message, true);
+      estado(semStatus, `${etq}: imagen subida.`);
+      if (p === semPersona) { semFirma = ""; semCargar(); }
+    });
+    async function semEliminar(iso, etiqueta, boton) {
+      const p = semPersona;
+      if (!p || !confirm(`¿Eliminar la imagen de ${etiqueta}?`)) return;
+      boton.disabled = true;
+      const { error } = await bucket().remove([semRutaImg(iso)]);
+      if (error) { boton.disabled = false; return estado(semStatus, "No se pudo eliminar la imagen.", true); }
+      estado(semStatus, `${etiqueta}: imagen eliminada.`);
+      semFirma = ""; semCargar();
+    }
+
+    /* navegación entre semanas */
+    $("#semPrev").addEventListener("click", () => { semLunes.setDate(semLunes.getDate() - 7); semRender(); });
+    $("#semNext").addEventListener("click", () => { semLunes.setDate(semLunes.getDate() + 7); semRender(); });
+    $("#semHoy").addEventListener("click", () => { semLunes = semLunesDe(new Date()); semRender(); });
+    /* sincronización: cada 5 s mientras la ventana está abierta */
+    setInterval(() => {
+      if (document.hidden || !semPersona || !document.getElementById("modal-semana").classList.contains("is-open")) return;
+      semCargar(true);
+    }, 5000);
+    window.addEventListener("kk:modal-cerrado", (e) => { if (e.detail === "modal-semana") { semPersona = null; } });
+
     ctFilas.forEach((fila) => {
       fila.querySelector("[data-ver-pesos]")?.addEventListener("click", () => verPesoPersona(fila));
     });
