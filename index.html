@@ -1878,10 +1878,26 @@
       }
     });
 
-    /* CANDADO KILAGES: usuario y contraseña para acceder */
+    /* CANDADO KILAGES / TELÉFONOS: usuario y contraseña para acceder.
+       - En modo administrador NO se pide nada.
+       - En modo normal se pide UNA sola vez (sirve para KILAGES y para teléfonos de PERSONAL)
+         y se recuerda hasta recargar o cerrar la página (solo en memoria, no se guarda). */
     const KILAJES_USER = "mercedes2026", KILAJES_PASS = "mercedes2026";
-    let kilajesAbierto = false;
+    window.kkModoAdmin = false;          /* lo actualiza el módulo de Supabase (admin real, sin vista de espectador) */
+    let accesoConcedido = false;         /* true tras ingresar usuario y contraseña correctos */
+    const accesoLibre = () => window.kkModoAdmin || accesoConcedido;
     let candadoDestino = "kilajes";   /* "kilajes" o "tel" */
+
+    const ICONO_CANDADO_CERRADO = $("#kilajesLock").innerHTML;
+    const ICONO_CANDADO_ABIERTO = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 7.5-2"/></svg>';
+    function actualizarCandadoUI() {
+      const libre = accesoLibre();
+      $("#kilajesLock").classList.toggle("is-open", libre);
+      $("#kilajesLock").innerHTML = libre ? ICONO_CANDADO_ABIERTO : ICONO_CANDADO_CERRADO;
+      if (typeof telBtn !== "undefined") actualizarTitulosTel();
+    }
+    window.addEventListener("kk:modo", actualizarCandadoUI);
+
     function abrirCandado(destino) {
       candadoDestino = destino;
       $("#lockMsg").textContent = destino === "tel"
@@ -1894,11 +1910,10 @@
 
     function intentarKilajes() {
       if (lockUser.value.trim() === KILAJES_USER && lockPass.value === KILAJES_PASS) {
-        if (candadoDestino === "tel") { cerrarModal($("#modal-candado")); setTel(true); return; }
-        kilajesAbierto = true;
-        $("#kilajesLock").classList.add("is-open");
-        $("#kilajesLock").innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 7.5-2"/></svg>';
+        accesoConcedido = true;
+        actualizarCandadoUI();
         cerrarModal($("#modal-candado"));
+        if (candadoDestino === "tel") { setTel(true); return; }
         document.querySelector('.menu__item[data-modal="modal-pesos"]').click();
       } else {
         lockError.textContent = "Usuario o contraseña incorrectos";
@@ -1907,9 +1922,9 @@
       }
     }
 
-    /* intercepta cualquier apertura de KILAGES (incluido VER PESOS) hasta ingresar */
+    /* intercepta la apertura de KILAGES (incluido VER PESOS) solo si falta autorización */
     document.addEventListener("click", (e) => {
-      if (kilajesAbierto) return;
+      if (accesoLibre()) return;
       const item = e.target.closest && e.target.closest('.menu__item[data-modal="modal-pesos"]');
       if (!item) return;
       e.stopPropagation();
@@ -2032,17 +2047,28 @@
     }));
     filtrarContactos();
 
-    /* TELÉFONOS: ocultos hasta activar el icono (pide usuario y contraseña); al cerrar sesión se vuelven a ocultar */
+    /* TELÉFONOS: ocultos hasta activar el icono. Modo admin: sin contraseña.
+       Modo normal: pide usuario y contraseña solo la primera vez (hasta recargar la página).
+       Al cerrar sesión se vuelven a ocultar, pero ya no se vuelve a pedir la contraseña. */
     const telBtn = $("#telToggle");
     let telVisible = false;
+    function actualizarTitulosTel() {
+      const t = telVisible
+        ? "Ocultar números de teléfono"
+        : (accesoLibre() ? "Mostrar números de teléfono" : "Mostrar números de teléfono (pide usuario y contraseña)");
+      telBtn.title = t; telBtn.setAttribute("aria-label", t);
+    }
     function setTel(v) {
       telVisible = v;
       $("#contactosCols").classList.toggle("tel-oculto", !v);
       telBtn.setAttribute("aria-pressed", String(v));
-      const t = v ? "Ocultar números de teléfono" : "Mostrar números de teléfono (pide usuario y contraseña)";
-      telBtn.title = t; telBtn.setAttribute("aria-label", t);
+      actualizarTitulosTel();
     }
-    telBtn.addEventListener("click", () => (telVisible ? setTel(false) : abrirCandado("tel")));
+    telBtn.addEventListener("click", () => {
+      if (telVisible) setTel(false);
+      else if (accesoLibre()) setTel(true);
+      else abrirCandado("tel");
+    });
     window.addEventListener("kk:logout", () => setTel(false));
 
     /* BRILLO QUE SIGUE AL MOUSE */
@@ -2148,6 +2174,8 @@
       adminPanel.classList.toggle("hidden", !esAdmin || vistaEspectador);
       $("#adminPreviewBar").classList.toggle("hidden", !(esAdmin && vistaEspectador));
       $("#modoTag").textContent = !esAdmin || vistaEspectador ? "Modo espectador" : "Modo administrador";
+      window.kkModoAdmin = esAdmin && !vistaEspectador;
+      window.dispatchEvent(new Event("kk:modo"));
       if (sesion && !ctCargado) { ctCargado = true; cargarContactos(); }
       if (!sesion) ctCargado = false;
       renderContactosAdmin();
